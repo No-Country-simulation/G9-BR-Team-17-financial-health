@@ -23,7 +23,7 @@ Este documento é referência obrigatória para a equipe de Ciência de Dados (n
 | transacoes[].valor | número decimal | Maior que 0 | Sim | Valor monetário da transação individual |
 | perfil_financeiro | string (enum) | "Saudavel", "Em observacao", "Em risco" | Sim (saída) | Classificação consolidada da saúde financeira do usuário |
 | probabilidade | número decimal | 0 a 1 | Sim (saída) | Grau de confiança do modelo na classificação do perfil |
-| resumo_gastos | objeto (chave dinâmica) | Chaves conforme domínio de categorias | Sim (saída) | Agregação de valores de transações por categoria identificada |
+| resumo_gastos | objeto (chave dinâmica) | Chaves conforme domínio de categorias | Sim (saída) | Agregação de valores de transações por categoria identificada. As chaves seguem a regra de derivação: nome da categoria em minúsculas, sem acentos e sem espaços (ex: "Alimentacao", "Em observacao" → "em_observacao") |
 | recomendacoes | lista de string | Mínimo 1 item | Sim (saída) | Conjunto de orientações textuais vinculadas aos indicadores |
 | categoria (classificação isolada) | string (enum) | Conforme domínio de categorias | Sim (saída) | Categoria atribuída a uma transação individual |
 
@@ -155,7 +155,34 @@ Antes da classificação, toda descrição de transação deve passar pelas segu
 
 ---
 
-## 9. Glossário de Termos do Domínio
+## 9. Domínio: Recomendações
+
+### 9.1 Matriz de Gatilho e Texto
+
+Toda recomendação gerada deve estar vinculada a um indicador identificado na análise (RN004). A tabela abaixo define os gatilhos e os textos correspondentes.
+
+| ID | Gatilho | Recomendação |
+|---|---|---|
+| REC001 | Perfil "Em risco" | Priorizar quitacao de dividas para reduzir o comprometimento da renda |
+| REC002 | Perfil "Em risco" e frequencia_poupanca = "Nenhuma" | Estabelecer meta minima de poupanca mensal, mesmo que o valor seja pequeno |
+| REC003 | Perfil "Em observacao" e frequencia_poupanca = "Baixa" ou "Media" | Aumentar a frequencia de poupanca para criar reserva financeira |
+| REC004 | Concentracao de gastos em Lazer > 30% da renda | Reduzir gastos com lazer e entretenimento |
+| REC005 | Concentracao de gastos em Servicos > 25% da renda | Revisar assinaturas e servicos contratados |
+| REC006 | nivel_endividamento > 40 | Reduzir o nivel de endividamento antes de assumir novos compromissos |
+| REC007 | Perfil "Saudavel" e frequencia_poupanca = "Alta" | Manter o padrao atual de poupanca e gastos |
+| REC008 | Perfil "Saudavel" e frequencia_poupanca = "Media" | Considerar aumentar a reserva de emergencia |
+| REC009 | Categoria com maior gasto identificada | Monitorar gastos recorrentes em {categoria} |
+| REC010 | Nenhum gatilho especifico ativado | Manter o acompanhamento regular dos seus gastos |
+
+### 9.2 Regras de Ativacao
+
+- Podem ser ativadas multiplas recomendacoes em uma mesma analise
+- A ordem de exibicao deve priorizar recomendacoes vinculadas ao perfil (REC001 a REC003), depois as vinculadas a indicadores especificos (REC004 a REC009), por ultimo a generica (REC010)
+- REC010 so deve ser exibida quando nenhuma outra recomendacao for ativada
+
+---
+
+## 10. Glossário de Termos do Domínio
 
 | Termo | Definição |
 |---|---|
