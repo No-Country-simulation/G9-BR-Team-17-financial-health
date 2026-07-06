@@ -6,11 +6,11 @@
 
 ## 1. Visão Geral da Arquitetura
 
-O sistema é composto por três serviços independentes que rodam em containers Docker, orquestrados pelo docker-compose:
+O sistema é composto por três serviços independentes que rodam em containers Docker, orquestrados pelo docker compose:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        docker-compose                           │
+│                        docker compose                            │
 │                                                                 │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────────┐   │
 │  │   Frontend   │    │     API      │    │   ML Service     │   │
@@ -72,7 +72,7 @@ sequenceDiagram
 - **Nginx**: servindo build estático, deploy universal
 - Não há necessidade de SSR ou rotas no servidor para o MVP
 
-### 2.3 Por que docker-compose?
+### 2.3 Por que docker compose?
 
 - Ambiente idêntico em todas as máquinas
 - Zero instalação de dependências (Java, Python, Node) nos notebooks da equipe
@@ -143,24 +143,38 @@ nidus/
 
 ## 4. Armazenamento
 
-### 4.1 Local (MVP)
+### 4.1 Local (modo dev, `ARMAZENAMENTO_TIPO=local`)
 
-- Diretório `./data/analises/` montado como volume Docker
+- Diretório `./data/analises/` montado como volume Docker no serviço `api`
 - Cada análise salva como `{id}.json`
 - Simula o comportamento do OCI Object Storage
+- Nenhuma credencial OCI necessária
 
-### 4.2 OCI Object Storage (Produção)
+### 4.2 OCI Object Storage (modo producao, `ARMAZENAMENTO_TIPO=oci`)
 
 - Mesma interface `Armazenamento`
 - Configurado via variáveis de ambiente:
   - `OCI_BUCKET_NAME`
   - `OCI_NAMESPACE`
   - `OCI_CONFIG_PATH`
-- Trocado ativando o profile `oci` no Spring Boot
+- Trocado via variavel `ARMAZENAMENTO_TIPO=oci` ou profile `oci` no Spring Boot
+- Deve ser implementado e compilado no codigo desde o MVP, mesmo que usado apenas na apresentacao
 
 ---
 
-## 5. Estratégia de Migração para OCI
+### 4.3 Regra de derivacao das chaves do resumo_gastos
+
+As chaves do objeto `resumo_gastos` sao derivadas do nome oficial da categoria (conforme secao 3 do DICIONARIO.md) aplicando:
+
+1. Conversao para minusculas
+2. Remocao de acentos
+3. Substituicao de espacos por underline (caso existam)
+
+Exemplo: `"Alimentacao"` → `"alimentacao"`, `"Em observacao"` → `"em_observacao"`.
+
+---
+
+## 5. Estrategia de Migracao para OCI
 
 | Componente | Local (MVP) | OCI (Produção) | Mudança |
 |---|---|---|---|
@@ -171,6 +185,10 @@ nidus/
 | Banco de dados | Não usado | OCI Autonomous DB (opcional) | Se necessário no futuro |
 
 Nenhuma linha de código de negócio precisa ser alterada. A migração é puramente operacional.
+
+### 5.1 Tratamento de timeout do ml-service
+
+A API (Spring Boot) deve configurar timeout de conexao e leitura ao chamar o ml-service. Caso o ml-service nao responda dentro do limite (ex: 5s), a API deve retornar HTTP 504 com o codigo de erro `SERVICO_ML_INDISPONIVEL`, conforme catalogo do CONTRATOS.md.
 
 ---
 
@@ -201,7 +219,7 @@ Nenhuma linha de código de negócio precisa ser alterada. A migração é puram
 
 ---
 
-## 8. Diagrama de Containers (docker-compose)
+## 8. Diagrama de Containers (docker compose)
 
 ```yaml
 services:
@@ -211,15 +229,24 @@ services:
       - "8000:8000"
     volumes:
       - ./ml-service/models:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/ml/health"]
+      interval: 5s
+      retries: 10
+      start_period: 15s
 
   api:
     build: ./backend
     ports:
       - "8080:8080"
+    volumes:
+      - ./data/analises:/app/data/analises
     environment:
       - ML_SERVICE_URL=http://ml-service:8000
+      - ARMAZENAMENTO_TIPO=local
     depends_on:
-      - ml-service
+      ml-service:
+        condition: service_healthy
 
   frontend:
     build: ./frontend
