@@ -5,18 +5,40 @@
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Oracle Cloud](https://img.shields.io/badge/Oracle_Cloud-F80000?style=for-the-badge&logo=oracle&logoColor=white)
+![OCI](https://img.shields.io/badge/OCI-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 
 ## Sobre
 
 Sistema de análise de comportamento financeiro com classificação de transações, perfil financeiro e recomendações personalizadas.
 
-```
-docker compose up
-├── Frontend (React)   :3000  ← Interface do usuário
-├── API (Spring Boot)  :8080  ← Regras de negócio + validação
-└── ML Service (FastAPI):8000 ← Classificação com modelo treinado
+### Arquitetura da Solução
+
+```mermaid
+graph LR
+    subgraph Usuario
+        U[Usuário]
+    end
+
+    subgraph docker_compose
+        F[Frontend React :3000]
+        A[API Spring Boot :8080]
+        M[ML Service FastAPI :8000]
+        P[(PostgreSQL :5432)]
+    end
+
+    subgraph OCI_Compute
+        O[OCI Compute VM]
+    end
+
+    U -->|HTTP| F
+    F -->|POST /api/*| A
+    A -->|POST /ml/analise| M
+    A -->|JPA/JDBC| P
+    F -.->|proxy reverso nginx| A
+
+    docker_compose -.->|mesmo docker-compose.yml| OCI_Compute
 ```
 
 ---
@@ -100,14 +122,14 @@ API REST contendo:
 * Tratamento de erros; 
 * Documentação dos endpoints. 
 
-### OCI 
+### OCI
 O edital do hackathon sugere os seguintes serviços OCI (a equipe deve utilizar pelo menos um): 
 * Object Storage para armazenamento de modelos ou dados; 
 * OCI Compute para hospedagem da aplicação; 
 * OCI Functions para processamento específico; 
 * Banco de dados opcional para persistência de informações. 
 
-O projeto adota o **Autonomous JSON Database (AJD)** no lugar do Object Storage, conforme justificativa detalhada na seção 2.6 do documento de Arquitetura.
+O projeto utiliza o **OCI Compute** como serviço OCI obrigatório. O mesmo `docker-compose.yml` usado em desenvolvimento é executado na VM da OCI sem qualquer alteração de código, ambiente ou dependência externa.
  
 ---
 
@@ -256,10 +278,10 @@ A arquitetura adotada deverá ser documentada pela equipe.
 
 ## OCI
 
-A solução deve utilizar pelo menos um serviço OCI como parte obrigatória do projeto. A implementação segue o padrão de interface descrito na ARQUITETURA.md:
+A solução deve utilizar pelo menos um serviço OCI como parte obrigatória do projeto. O serviço escolhido é o **OCI Compute**, que executa o mesmo `docker-compose.yml` usado em desenvolvimento:
 
-- **Dev** (`ARMAZENAMENTO_TIPO=local`): armazenamento em H2 local, sem dependência de nuvem
-- **Produção** (`ARMAZENAMENTO_TIPO=autonomous_json`): armazenamento no Oracle Autonomous JSON Database, ativado apenas quando necessário
+- **Dev**: docker compose na máquina local
+- **Produção**: docker compose na VM da OCI Compute
 
 ---
 
@@ -284,6 +306,7 @@ nidus/
 ├── notebooks/                        # Notebooks de treinamento
 │   ├── eda.ipynb
 │   └── treinamento.ipynb
+├── init.sql                          # Script de inicialização do PostgreSQL
 ├── docker-compose.yml
 ├── docker-compose.test.yml
 └── README.md
@@ -330,30 +353,30 @@ docker compose -f docker-compose.test.yml run frontend
 
 ## Modos de Execução
 
-O sistema suporta dois modos de armazenamento controlados pela variável de ambiente `ARMAZENAMENTO_TIPO`:
+O sistema utiliza o mesmo banco de dados (PostgreSQL) em desenvolvimento e produção:
 
-| Modo | ARMAZENAMENTO_TIPO | Onde os dados são salvos | Requer OCI? |
-|---|---|---|---|
-| **Dev** | `local` (default) | H2 em arquivo (`./data/nidus.db`) montado como volume Docker | Não |
-| **Produção** | `autonomous_json` | Oracle Autonomous JSON Database (coleção SODA) | Sim |
+| Ambiente | PostgreSQL | Como roda |
+| --- | --- | --- |
+| **Dev** | Container Docker (`postgres:16-alpine`) | `docker compose up` |
+| **Produção** | Container Docker na OCI Compute | `docker compose up` na VM |
 
-Durante o desenvolvimento, todos os membros da equipe rodam em modo `local`. Nenhuma credencial OCI é necessária. Na apresentação, ativa-se o modo `autonomous_json` para demonstrar a integração com o AJD real.
+Não há diferença de configuração ou implementação entre os ambientes. O mesmo `docker-compose.yml` funciona em ambos.
 
 ---
 
 ## Stack Tecnológica
 
 | Camada | Tecnologia | Finalidade |
-|---|---|---|
+| --- | --- | --- |
 | Frontend | React + Vite + TypeScript | Interface do usuário |
 | API | Java 17 + Spring Boot 3 | Regras de negócio, validação, recomendações |
 | ML Service | Python + FastAPI + Scikit-Learn | Classificação e perfil financeiro |
-| Banco de dados | H2 (dev) / Oracle AJD (prod) | MVP usa H2 em arquivo; produção usa AJD via SODA |
+| Banco de dados | PostgreSQL 16 | Persistência de análises e transações |
 | Container | Docker + docker compose | Ambiente padronizado para toda a equipe |
 | Testes (Java) | JUnit 5 + Mockito + WireMock | Testes unitários e de integração |
 | Testes (Python) | pytest + TestClient | Testes do ml-service |
 | Testes (React) | Vitest + React Testing Library + MSW | Testes do frontend |
-| Cloud | OCI (Autonomous JSON Database + Compute) | Produção / deploy |
+| Cloud | OCI Compute | Deploy do mesmo docker compose em produção |
 
 ---
 
