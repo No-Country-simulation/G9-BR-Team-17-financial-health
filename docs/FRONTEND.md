@@ -58,9 +58,51 @@ frontend/
 
 ---
 
-## 3. Páginas
+## 3. Fluxo de Navegação
 
-### 3.1 Página Inicial
+```mermaid
+graph TD
+    H["/ (Home)"] -->|Clique em "Análise Financeira"| AF["/analise-financeira"]
+    H -->|Clique em "Classificação de Transações"| CT["/classificacao-transacoes"]
+
+    AF -->|Preenche formulário + submete| AFR[Exibe Resultado da Análise]
+    AF -->|Erro de validação| AFE[Exibe Erro da API]
+
+    CT -->|Preenche transações + submete| CTR[Exibe Tabela de Classificação]
+    CT -->|Erro de validação| CTE[Exibe Erro da API]
+
+    AFR -->|Nova análise| AF
+    CTR -->|Nova classificação| CT
+```
+
+## 4. Hierarquia de Componentes
+
+```mermaid
+graph TD
+    App --> Layout
+    App --> Router
+
+    Router --> Home
+    Router --> AnaliseFinanceira
+    Router --> ClassificacaoTransacoes
+
+    AnaliseFinanceira --> FormTransacoes
+    AnaliseFinanceira --> ResultadoPerfil
+    AnaliseFinanceira --> ResumoGastos
+    AnaliseFinanceira --> ListaPadroesConsumo
+    AnaliseFinanceira --> ListaRecomendacoes
+    AnaliseFinanceira --> ErrorAlert
+
+    ClassificacaoTransacoes --> FormTransacoes
+    ClassificacaoTransacoes --> TabelaClassificacao
+    ClassificacaoTransacoes --> ErrorAlert
+
+    FormTransacoes --> TransacaoItem
+```
+
+## 5. Páginas
+
+### 5.1 Página Inicial
 
 Rota: `/`
 
@@ -69,7 +111,7 @@ Exibe dois cards com links para as funcionalidades do sistema:
 - **Análise Financeira Completa** → `/analise-financeira`
 - **Classificação de Transações** → `/classificacao-transacoes`
 
-### 3.2 Análise Financeira
+### 5.2 Análise Financeira
 
 Rota: `/analise-financeira`
 
@@ -126,7 +168,7 @@ Rota: `/analise-financeira`
 └─────────────────────────────────┘
 ```
 
-### 3.3 Classificação de Transações
+### 5.3 Classificação de Transações
 
 Rota: `/classificacao-transacoes`
 
@@ -146,7 +188,7 @@ Rota: `/classificacao-transacoes`
 
 ---
 
-## 4. Tipos TypeScript
+## 6. Tipos TypeScript
 
 ```ts
 // types/index.ts
@@ -191,7 +233,7 @@ interface ErroResponse {
 
 ---
 
-## 5. Chamadas à API
+## 7. Chamadas à API
 
 ```ts
 // services/api.ts
@@ -224,7 +266,7 @@ export async function classificarTransacoes(
 
 ---
 
-## 6. Proxy no Desenvolvimento (Vite)
+## 8. Proxy no Desenvolvimento (Vite)
 
 ```ts
 // vite.config.ts
@@ -247,7 +289,7 @@ O frontend faz requisições para `/api/analise-financeira` e o Vite redireciona
 
 ---
 
-## 7. Produção (Nginx)
+## 9. Produção (Nginx)
 
 ```nginx
 # nginx.conf
@@ -268,7 +310,7 @@ server {
 
 ---
 
-## 8. Docker
+## 10. Docker
 
 ### Dockerfile (desenvolvimento)
 
@@ -299,11 +341,11 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ---
 
-## 9. Responsabilidades
+## 11. Responsabilidades
 
 | Pessoa | O que faz |
 |---|---|
 | Frontend | Componentes, páginas, chamadas à API, testes, Dockerfile |
 | Back-end | Garante que os endpoints estão funcionando, revisa contratos |
 | Ciência de Dados | Usa o frontend para testar o modelo manualmente |
-| Tester não-técnico | Abre `localhost:3000`, preenche formulários, reporta bugs |
+| Infra e QA | Testa o fluxo completo abrindo `localhost:3000`, preenchendo formulários e reportando bugs |
