@@ -46,6 +46,7 @@ public class AnaliseFinanceiraService {
             mlResponse.getProbabilidade(),
             request.getNivelEndividamento(),
             request.getFrequenciaPoupanca(),
+            request.getRendaMensal(),
             resumoGastos
         );
 

@@ -4,20 +4,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nidus.dto.AnaliseFinanceiraRequest;
+import com.nidus.dto.AnaliseFinanceiraResponse;
 import com.nidus.dto.TransacaoRequest;
+import com.nidus.service.AnaliseFinanceiraService;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@WebMvcTest(AnaliseFinanceiraController.class)
 class AnaliseFinanceiraControllerTest {
 
     @Autowired
@@ -26,8 +28,20 @@ class AnaliseFinanceiraControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockitoBean
+    private AnaliseFinanceiraService service;
+
     @Test
     void deveRetornar200ComDadosValidos() throws Exception {
+        var response = new AnaliseFinanceiraResponse(
+            "Saudavel", new BigDecimal("0.91"),
+            Map.of("Alimentacao", new BigDecimal("420")),
+            List.of("Categoria de maior gasto: Alimentacao"),
+            List.of("Monitorar gastos recorrentes em Alimentacao")
+        );
+
+        when(service.analisar(any())).thenReturn(response);
+
         var request = new AnaliseFinanceiraRequest();
         request.setRendaMensal(new BigDecimal("4500"));
         request.setNivelEndividamento(new BigDecimal("25"));
@@ -40,7 +54,7 @@ class AnaliseFinanceiraControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.perfilFinanceiro").isString())
+            .andExpect(jsonPath("$.perfilFinanceiro").value("Saudavel"))
             .andExpect(jsonPath("$.probabilidade").isNumber())
             .andExpect(jsonPath("$.resumoGastos").isMap())
             .andExpect(jsonPath("$.recomendacoes").isArray());

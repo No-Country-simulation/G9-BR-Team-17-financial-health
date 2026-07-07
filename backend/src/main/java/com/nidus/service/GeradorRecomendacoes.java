@@ -2,6 +2,7 @@ package com.nidus.service;
 
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class GeradorRecomendacoes {
 
     public List<String> gerar(String perfilFinanceiro, BigDecimal probabilidade,
                               BigDecimal nivelEndividamento, String frequenciaPoupanca,
+                              BigDecimal rendaMensal,
                               Map<String, BigDecimal> resumoGastos) {
         var recomendacoes = new ArrayList<String>();
 
@@ -29,34 +31,37 @@ public class GeradorRecomendacoes {
 
         if ("Saudavel".equals(perfilFinanceiro)) {
             if ("Alta".equals(frequenciaPoupanca)) {
-                recomendacoes.add("Manter o padrao atual de poupanca");
+                recomendacoes.add("Manter o padrao atual de poupanca e gastos");
+                recomendacoes.add("Considerar reserva de emergencia adicional");
             } else if ("Media".equals(frequenciaPoupanca)) {
                 recomendacoes.add("Considerar aumentar a reserva de emergencia");
             }
-        }
-
-        if ("Saudavel".equals(perfilFinanceiro)) {
-            recomendacoes.add("Considerar reserva de emergencia adicional");
         }
 
         if (nivelEndividamento != null && nivelEndividamento.compareTo(new BigDecimal("40")) > 0) {
             recomendacoes.add("Reduzir o nivel de endividamento antes de assumir novos compromissos");
         }
 
+        if (rendaMensal != null && rendaMensal.compareTo(BigDecimal.ZERO) > 0) {
+            for (var entry : resumoGastos.entrySet()) {
+                var cat = entry.getKey();
+                var valor = entry.getValue();
+                var pctRenda = valor.multiply(new BigDecimal("100"))
+                    .divide(rendaMensal, 2, RoundingMode.HALF_UP);
+
+                if ("Lazer".equals(cat) && pctRenda.compareTo(new BigDecimal("30")) > 0) {
+                    recomendacoes.add("Reduzir gastos com lazer e entretenimento");
+                }
+                if ("Servicos".equals(cat) && pctRenda.compareTo(new BigDecimal("25")) > 0) {
+                    recomendacoes.add("Revisar assinaturas e servicos contratados");
+                }
+            }
+        }
+
         var categoriaMaisGasto = resumoGastos.entrySet().stream()
             .max(Map.Entry.comparingByValue());
         if (categoriaMaisGasto.isPresent()) {
-            var cat = categoriaMaisGasto.get().getKey();
-            var valor = categoriaMaisGasto.get().getValue();
-
-            if ("Lazer".equals(cat)) {
-                recomendacoes.add("Reduzir gastos com lazer e entretenimento");
-            }
-            if ("Servicos".equals(cat)) {
-                recomendacoes.add("Revisar assinaturas e servicos contratados");
-            }
-
-            recomendacoes.add("Monitorar gastos recorrentes em " + cat);
+            recomendacoes.add("Monitorar gastos recorrentes em " + categoriaMaisGasto.get().getKey());
         }
 
         if (recomendacoes.isEmpty()) {

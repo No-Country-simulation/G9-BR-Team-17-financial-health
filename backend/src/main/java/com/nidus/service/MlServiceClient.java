@@ -10,19 +10,21 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 @Service
 public class MlServiceClient {
 
     private final RestTemplate restTemplate;
     private final String mlServiceUrl;
-    private final int timeout;
 
     public MlServiceClient(@Value("${ml-service.url}") String mlServiceUrl,
                            @Value("${ml-service.timeout}") int timeout) {
         this.mlServiceUrl = mlServiceUrl;
-        this.timeout = timeout;
-        this.restTemplate = new RestTemplate();
+        var factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(timeout);
+        factory.setReadTimeout(timeout);
+        this.restTemplate = new RestTemplate(factory);
     }
 
     public MlAnaliseResponse analisar(MlAnaliseRequest request) {

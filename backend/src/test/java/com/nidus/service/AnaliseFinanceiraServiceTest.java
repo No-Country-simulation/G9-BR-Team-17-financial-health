@@ -50,7 +50,7 @@ class AnaliseFinanceiraServiceTest {
         when(mlServiceClient.analisar(any())).thenReturn(mlResponse);
         when(identificadorPadroes.identificar(any(), any()))
             .thenReturn(List.of("Categoria de maior gasto: Alimentacao"));
-        when(geradorRecomendacoes.gerar(any(), any(), any(), any(), any()))
+        when(geradorRecomendacoes.gerar(any(), any(), any(), any(), any(), any()))
             .thenReturn(List.of("Monitorar gastos em Alimentacao"));
 
         var response = service.analisar(request);

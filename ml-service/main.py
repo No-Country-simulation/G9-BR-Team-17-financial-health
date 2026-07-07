@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
@@ -97,6 +98,45 @@ def analise(request: AnaliseRequest):
             TransacaoClassificada(**t) for t in classificadas
         ],
     )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    errors = exc.errors()
+    if not errors:
+        return JSONResponse(status_code=422, content={
+            "erro": {
+                "codigo": "ERRO_VALIDACAO",
+                "mensagem": "Dados invalidos",
+                "campo": None,
+                "timestamp": None,
+            }
+        })
+
+    first = errors[0]
+    loc = first.get("loc", [])
+    field = ".".join(str(p) for p in loc[1:]) if len(loc) > 1 else (loc[0] if loc else None)
+    msg = first.get("msg", "Dado invalido")
+
+    codigo = "CAMPO_INVALIDO"
+    if field and "transacoes" in field and ("too_short" in str(first.get("type", "")) or "min_length" in str(first.get("type", ""))):
+        codigo = "LISTA_TRANSACOES_VAZIA"
+        msg = "E necessario informar ao menos uma transacao para classificacao"
+    elif field and "valor" in field and "greater than" in msg.lower():
+        codigo = "VALOR_TRANSACAO_INVALIDO"
+        msg = "O campo 'valor' da transacao deve ser maior que zero"
+    elif field and "renda_mensal" in field:
+        codigo = "CAMPO_INVALIDO"
+        msg = "A renda mensal deve ser maior que zero"
+
+    return JSONResponse(status_code=422, content={
+        "erro": {
+            "codigo": codigo,
+            "mensagem": msg,
+            "campo": field,
+            "timestamp": None,
+        }
+    })
 
 
 @app.exception_handler(HTTPException)
