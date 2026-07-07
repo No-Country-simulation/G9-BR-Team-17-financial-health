@@ -24,16 +24,25 @@
 
 ```
 frontend/
-├── public/
-├── src/
+├── Dockerfile                          ← Build de produção (Nginx)
+├── Dockerfile.dev                      ← Dev server (Vite)
+├── Dockerfile.test                     ← Testes (Vitest)
+├── nginx.conf                          ← Proxy reverso (produção)
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── index.html                          ← Entry point HTML
+└── src/
+│   ├── main.tsx                        ← Entry point React
+│   ├── App.tsx                         ← Rotas
 │   ├── pages/
-│   │   ├── AnaliseFinanceira.tsx        ← Formulário + resultado da análise
-│   │   └── ClassificacaoTransacoes.tsx  ← Lista de transações + categorias
+│   │   ├── AnaliseFinanceira.tsx       ← Formulário + resultado da análise
+│   │   └── ClassificacaoTransacoes.tsx ← Lista de transações + categorias
 │   ├── components/
 │   │   ├── Layout.tsx                  ← Header, nav, footer
 │   │   ├── FormTransacoes.tsx          ← Lista dinâmica de transações
 │   │   ├── ResultadoPerfil.tsx         ← Card com perfil + probabilidade
-│   │   ├── ResumoGastos.tsx            ← Gráfico/tabela de gastos por categoria
+│   │   ├── ResumoGastos.tsx            ← Tabela de gastos por categoria
 │   │   ├── ListaPadroesConsumo.tsx     ← Lista de padrões de consumo
 │   │   ├── ListaRecomendacoes.tsx      ← Lista de recomendações
 │   │   ├── TabelaClassificacao.tsx     ← Tabela descrição/valor/categoria
@@ -42,18 +51,10 @@ frontend/
 │   │   └── api.ts                      ← Chamadas HTTP para o backend
 │   ├── types/
 │   │   └── index.ts                    ← Interfaces TypeScript
-│   ├── mocks/
-│   │   ├── handlers.ts                 ← MSW handlers
-│   │   ├── server.ts                   ← MSW server setup
-│   │   └── data.ts                     ← Dados mockados
-│   ├── App.tsx                         ← Rotas
-│   └── main.tsx                        ← Entry point
-├── nginx.conf                          ← Configuração do proxy reverso
-├── Dockerfile
-├── Dockerfile.test
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+│   └── mocks/
+│       ├── handlers.ts                 ← MSW handlers
+│       ├── server.ts                   ← MSW server setup
+│       └── data.ts                     ← Dados mockados
 ```
 
 ---

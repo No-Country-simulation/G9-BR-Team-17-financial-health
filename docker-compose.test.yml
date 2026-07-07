@@ -1,4 +1,16 @@
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nidus
+      POSTGRES_USER: nidus
+      POSTGRES_PASSWORD: nidus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nidus"]
+      interval: 5s
+      retries: 10
+      start_period: 10s
+
   ml-service:
     build:
       context: ./ml-service
@@ -7,6 +19,7 @@ services:
 
   wiremock:
     image: wiremock/wiremock:latest
+    command: ["--port", "8080"]
     volumes:
       - ./backend/src/test/resources/wiremock:/home/wiremock
 
@@ -21,7 +34,10 @@ services:
       - DB_PASSWORD=nidus
     command: mvn test
     depends_on:
-      - wiremock
+      wiremock:
+        condition: service_started
+      db:
+        condition: service_healthy
 
   frontend:
     build:

@@ -420,6 +420,18 @@ export const handlers = [
 
 ```yaml
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nidus
+      POSTGRES_USER: nidus
+      POSTGRES_PASSWORD: nidus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nidus"]
+      interval: 5s
+      retries: 10
+      start_period: 10s
+
   ml-service:
     build:
       context: ./ml-service
@@ -428,6 +440,7 @@ services:
 
   wiremock:
     image: wiremock/wiremock:latest
+    command: ["--port", "8080"]
     volumes:
       - ./backend/src/test/resources/wiremock:/home/wiremock
 
@@ -436,15 +449,21 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - ML_SERVICE_URL=http://wiremock:8081
+      - ML_SERVICE_URL=http://wiremock:8080
+      - DB_URL=jdbc:postgresql://db:5432/nidus
+      - DB_USER=nidus
+      - DB_PASSWORD=nidus
     command: mvn test
     depends_on:
-      - wiremock
+      wiremock:
+        condition: service_started
+      db:
+        condition: service_healthy
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test
     command: npx vitest run --coverage
 ```
 

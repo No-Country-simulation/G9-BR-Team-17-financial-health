@@ -126,33 +126,58 @@ nidus/
 │   ├── Dockerfile
 │   ├── pom.xml
 │   └── src/
-│       ├── main/java/com/nidus/
-│       │   ├── controller/           # Endpoints REST
-│       │   ├── dto/                  # Request/Response DTOs
-│       │   ├── service/              # Regras de negócio
-│       │   ├── validation/           # Validadores
-│       │   └── repository/           # Acesso a dados (JPA)
+│       ├── main/
+│       │   ├── java/com/nidus/
+│       │   │   ├── NidusApplication.java
+│       │   │   ├── controller/       # Endpoints REST
+│       │   │   ├── dto/              # Request/Response DTOs
+│       │   │   ├── model/            # Entidades JPA
+│       │   │   ├── repository/       # Acesso a dados (JPA)
+│       │   │   ├── service/          # Regras de negócio
+│       │   │   └── validation/       # Validadores e exception handler
+│       │   └── resources/
+│       │       └── application.properties
 │       └── test/
+│           ├── java/com/nidus/
+│           │   ├── controller/       # Testes de integração
+│           │   └── service/          # Testes unitários
+│           └── resources/
+│               ├── application-test.properties
+│               └── wiremock/         # Fixtures do WireMock
 ├── ml-service/                       # FastAPI (ML)
 │   ├── Dockerfile
 │   ├── requirements.txt
+│   ├── main.py                       # Aplicação FastAPI
 │   ├── predictor.py                  # Serviço de predição
 │   ├── models/                       # Modelos .pkl
 │   └── tests/
+│       ├── test_main.py
+│       └── test_predictor.py
 ├── frontend/                         # React + Vite
-│   ├── Dockerfile
-│   ├── package.json
+│   ├── Dockerfile                    # Build de produção (Nginx)
+│   ├── Dockerfile.dev                # Dev server (Vite)
+│   ├── Dockerfile.test               # Testes (Vitest)
 │   ├── nginx.conf                    # Proxy reverso (produção)
-│   ├── src/
-│   │   ├── pages/                    # Páginas
-│   │   ├── components/               # Componentes reutilizáveis
-│   │   └── services/                 # Chamadas à API
-│   └── tests/
+│   ├── package.json
+│   ├── index.html
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   └── src/
+│       ├── main.tsx                  # Entry point
+│       ├── App.tsx                   # Rotas
+│       ├── pages/                    # Páginas
+│       ├── components/               # Componentes reutilizáveis
+│       ├── services/                 # Chamadas à API
+│       ├── types/                    # Interfaces TypeScript
+│       └── mocks/                    # MSW handlers
 ├── notebooks/                        # Notebooks de treinamento
 │   ├── eda.ipynb
 │   └── treinamento.ipynb
+├── scripts/
+│   └── gerar_dados.py                # Geração de dataset sintético
 ├── init.sql                          # Script de inicialização do banco
 ├── docker-compose.yml
+├── docker-compose.test.yml
 └── README.md
 ```
 
