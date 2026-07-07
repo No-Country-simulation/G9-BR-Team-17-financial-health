@@ -1,0 +1,30 @@
+services:
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    command: pytest tests/ -v --cov
+
+  wiremock:
+    image: wiremock/wiremock:latest
+    volumes:
+      - ./backend/src/test/resources/wiremock:/home/wiremock
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - ML_SERVICE_URL=http://wiremock:8080
+      - DB_URL=jdbc:postgresql://db:5432/nidus
+      - DB_USER=nidus
+      - DB_PASSWORD=nidus
+    command: mvn test
+    depends_on:
+      - wiremock
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    command: npx vitest run --coverage
