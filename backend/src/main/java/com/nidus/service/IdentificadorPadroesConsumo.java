@@ -44,7 +44,7 @@ public class IdentificadorPadroesConsumo {
                 : BigDecimal.ZERO;
 
             if (percentual.compareTo(LIMIAR_CONCENTRACAO) > 0) {
-                var fmt = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.of("pt", "BR")));
+                var fmt = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(new Locale("pt", "BR")));
                 padroes.add("Concentracao em " + cat + " (" + fmt.format(percentual) + "% do total gasto)");
             }
 
