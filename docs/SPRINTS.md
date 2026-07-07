@@ -18,26 +18,31 @@ O edital original do hackathon usa a categoria "entretenimento" no exemplo de sa
 ## 3. Premissas de Capacidade
 
 | Item | Valor considerado |
-|---|---|
+| --- | --- |
 | Membros da equipe | 8 |
 | Dedicação média por pessoa | 1h por dia útil |
-| Capacidade semanal por pessoa | 5 a 7h |
-| Capacidade semanal teórica do time | 40 a 56h |
-| Capacidade semanal efetiva considerada no plano | 60% a 70% do teórico, por conta de troca de contexto, comunicação e imprevistos |
+| Capacidade semanal por pessoa | 5h (1h/dia × 5 dias úteis) |
+| Capacidade semanal teórica do time | 40h (8 pessoas × 5h) |
+| Capacidade semanal efetiva considerada no plano | 50% a 60% do teórico, por conta de troca de contexto, comunicação, curva de aprendizado de Juniores e imprevistos (20-24h/semana efetivas) |
 | Duração total | 6 semanas |
 
-Como o tempo diário é curto, o plano prioriza squads de duas pessoas em vez de tarefas atribuídas a um único indivíduo. Isso reduz o risco de travar uma frente inteira caso alguém saia do projeto no meio do caminho.
+Como o tempo diário é curto e todos os membros são nível Júnior, o plano adota as seguintes premissas:
+
+- **Squads de duas pessoas** em vez de tarefas individuais, reduzindo o risco de travar uma frente inteira caso alguém saia.
+- **Curva de aprendizado incluída na capacidade efetiva**: os 50-60% de capacidade efetiva já consideram o tempo necessário para configurar ambiente, aprender ferramentas e se ambientar ao código.
+- **Sprint 0 não prevista**: o aprendizado ocorre dentro das sprints regulares, com escopo reduzido nas primeiras semanas.
+- **Documentação viva**: cada squad mantém a documentação atualizada, reduzindo a perda de conhecimento em caso de saída de membros.
 
 ---
 
 ## 4. Estrutura de Squads
 
 | Squad | Responsabilidade principal | Documentos de referência |
-|---|---|---|
+| --- | --- | --- |
 | Dados | EDA, limpeza dos dados, engenharia de atributos, treino e avaliação dos modelos, serialização em `.pkl`, endpoint `/ml/analise` no FastAPI | REQUISITOS.md, DICIONARIO.md |
-| Backend | API Spring Boot, validação de entrada, geração de recomendações, integração com o ml-service, implementação da interface de Armazenamento (local e OCI) | CONTRATOS.md, ARQUITETURA.md |
+| Backend | API Spring Boot, validação de entrada, geração de recomendações, integração com o ml-service, acesso a dados via JPA/PostgreSQL | CONTRATOS.md, ARQUITETURA.md |
 | Frontend | Páginas React, componentes, integração com a API, tratamento de erro e estados de carregamento | FRONTEND.md |
-| Infra, QA e Documentação | Docker e docker compose, configuração real do serviço OCI, testes automatizados, consolidação da documentação e do board de tarefas | TESTES.md, este documento |
+| Infra, QA e Documentação | Docker e docker compose, configuração da VM OCI Compute, testes automatizados, consolidação da documentação e do board de tarefas | TESTES.md, este documento |
 
 Cada squad define, na Sprint 1, um titular e um backup para a entrega principal. O backup participa das decisões desde o início, revisa o trabalho do titular e mantém a documentação markdown do squad atualizada. Se o titular sair do projeto, o backup assume sem precisar de repasse longo, porque já acompanhou o histórico de decisões.
 
@@ -69,7 +74,7 @@ gantt
     Setup e validacao de entrada        :b1, 2026-07-06, 7d
     Endpoint classificacao com mock ML  :b2, after b1, 7d
     Integracao real com ml-service      :b3, after b2, 7d
-    Armazenamento OCI real               :b4, after b3, 7d
+    Historico e PostgreSQL               :b4, after b3, 7d
     section Frontend
     Setup e layout                      :f1, 2026-07-06, 7d
     Formularios e mocks MSW             :f2, after f1, 7d
@@ -79,7 +84,7 @@ gantt
     Docker dev e board de tarefas         :i1, 2026-07-06, 7d
     WireMock e testes unitarios            :i2, after i1, 7d
     Testes de integracao completos         :i3, after i2, 7d
-    Setup real do AJD (Oracle Autonomous DB)  :i4, after i3, 7d
+    Setup da VM OCI Compute e deploy       :i4, after i3, 7d
     section Time todo
     Testes finais e polimento              :t1, 2026-08-03, 7d
     Ensaio de apresentacao e buffer         :t2, after t1, 7d
@@ -122,16 +127,16 @@ Critério de saída da sprint: o fluxo de classificação de transações funcio
 
 Critério de saída da sprint: o endpoint `/analise-financeira` funciona de ponta a ponta com o modelo real, sem mocks.
 
-### Sprint 4, semana 4: OCI e persistência
+### Sprint 4, semana 4: Persistência e deploy
 
 | Squad | Entregas da semana |
 |---|---|
-| Backend | Implementação da interface de Armazenamento nos modos local e OCI, configuração das variáveis de ambiente |
-| Infra e QA | Criação do Autonomous JSON Database real, download da wallet, teste manual de conexão via SODA |
+| Backend | Implementação do histórico de análises com JPA + PostgreSQL, criação do repositório e endpoint `/historico-analises` |
+| Infra e QA | Criação da VM OCI Compute, instalação do Docker, teste de deploy do `docker-compose.yml` na VM |
 | Dados | Ajuste fino do modelo com base nos testes reais, início da explicabilidade se houver tempo disponível |
 | Frontend | Tratamento de erro no cliente, estados de carregamento, responsividade |
 
-Critério de saída da sprint: a alternância entre `ARMAZENAMENTO_TIPO=local` e `autonomous_json` funciona de forma comprovada, não apenas codificada.
+Critério de saída da sprint: o sistema roda completo na VM da OCI Compute com `docker compose up`, sem alteração de código.
 
 ### Sprint 5, semana 5: Testes e consolidação
 
@@ -179,7 +184,7 @@ flowchart TD
 ## 8. Matriz de Responsabilidades Resumida
 
 | Entrega obrigatória do edital | Squad responsável | Sprint alvo |
-|---|---|---|
+| --- | --- | --- |
 | Classificação automática de despesas | Dados e Backend | Sprint 2 e 3 |
 | Identificação de padrões de consumo | Dados | Sprint 2 |
 | Classificação de perfil financeiro | Dados e Backend | Sprint 3 |
@@ -189,7 +194,8 @@ flowchart TD
 | Endpoint de classificação isolada | Backend | Sprint 2 |
 | Validação de entrada e tratamento de erros | Backend | Sprint 1 e 2 |
 | Documentação dos endpoints | Backend e Infra/QA | Sprint 1 a 5 |
-| Integração com OCI | Backend e Infra/QA | Sprint 4 |
+| Integração com OCI (Compute) | Infra e QA | Sprint 4 |
+| Histórico de análises (PostgreSQL) | Backend | Sprint 4 |
 | Três ou mais exemplos reais de uso | Backend e Dados | Sprint 6 |
 | Notebook de Ciência de Dados completo | Dados | Sprint 5 |
 
