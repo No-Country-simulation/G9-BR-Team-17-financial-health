@@ -555,7 +555,103 @@ Este contrato define a comunicação entre a API (Spring Boot) e o ML Service (F
 
 ---
 
-## 8. Observações de Rastreabilidade
+## 8. Endpoint: Histórico de Análises
+
+### 8.1 Identificação
+
+| Item | Detalhe |
+|---|---|
+| Método | GET |
+| Caminho | /historico-analises |
+| Descrição | Retorna a lista das análises financeiras realizadas anteriormente, ordenadas da mais recente para a mais antiga. |
+
+### 8.2 Contrato de Saída (sucesso, 200)
+
+```json
+{
+  "analises": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "criado_em": "2026-07-06T14:32:10Z",
+      "perfil_financeiro": "Em observacao",
+      "resumo_gastos": {
+        "alimentacao": 420,
+        "transporte": 300,
+        "lazer": 40
+      }
+    }
+  ]
+}
+```
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| analises | lista de objetos | Lista de análises anteriores, ordenadas da mais recente para a mais antiga |
+| analises[].id | string (UUID v4) | Identificador único da análise |
+| analises[].criado_em | string (ISO 8601) | Momento em que a análise foi realizada |
+| analises[].perfil_financeiro | string (enum) | Perfil classificado na análise: "Saudavel", "Em observacao", "Em risco" |
+| analises[].resumo_gastos | objeto (chave dinâmica) | Mapa de categoria de despesa para valor total agregado |
+
+### 8.3 Exemplos Reais de Utilização
+
+**Exemplo 1: Com análises anteriores**
+
+Requisição:
+```
+GET /historico-analises
+```
+
+Resposta (200):
+```json
+{
+  "analises": [
+    {
+      "id": "c7d8e9f0-a1b2-3456-cdef-0987654321ab",
+      "criado_em": "2026-07-06T14:30:00Z",
+      "perfil_financeiro": "Em observacao",
+      "resumo_gastos": {
+        "alimentacao": 420,
+        "transporte": 300,
+        "lazer": 40
+      }
+    },
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-1234567890ab",
+      "criado_em": "2026-07-05T10:15:00Z",
+      "perfil_financeiro": "Em risco",
+      "resumo_gastos": {
+        "servicos": 900,
+        "transporte": 250,
+        "alimentacao": 300
+      }
+    }
+  ]
+}
+```
+
+**Exemplo 2: Sem análises anteriores**
+
+Requisição:
+```
+GET /historico-analises
+```
+
+Resposta (200):
+```json
+{
+  "analises": []
+}
+```
+
+### 8.4 Observações
+
+- O limite máximo de análises retornadas é definido por configuração padrão (ex: 20)
+- A listagem considera apenas as análises armazenadas localmente (H2 em dev, AJD em prod)
+- Este endpoint depende da implementação de RF014 (registro automático de análises no armazenamento)
+
+---
+
+## 9. Observações de Rastreabilidade
 
 Cada requisição processada deve gerar um identificador único de execução, conforme estabelecido em RN009 do documento de SRS. Esse identificador não faz parte obrigatória do contrato de resposta ao cliente, mas deve estar disponível internamente para fins de auditoria e depuração, podendo ser exposto futuramente como cabeçalho de resposta, caso definido em documento de arquitetura.
 

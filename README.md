@@ -102,7 +102,7 @@ API REST contendo:
 
 ### OCI 
 Utilização de pelo menos um dos seguintes serviços: 
-* Object Storage para armazenamento de modelos ou dados; 
+* Autonomous JSON Database (AJD) para armazenamento de análises; 
 * OCI Compute para hospedagem da aplicação; 
 * OCI Functions para processamento específico; 
 * Banco de dados opcional para persistência de informações. 
@@ -194,7 +194,7 @@ Exemplos:
 * Análise de perfil financeiro;
 * Geração de recomendações;
 * API documentada;
-* Integration com OCI;
+* Integração com OCI;
 * Mínimo de três exemplos reais de utilização.
 
 ---
@@ -249,10 +249,10 @@ A arquitetura adotada deverá ser documentada pela equipe.
 
 ## OCI
 
-A solucao deve utilizar pelo menos um servico OCI como parte obrigatoria do projeto. A implementacao segue o padrao de interface descrito na ARQUITETURA.md:
+A solução deve utilizar pelo menos um serviço OCI como parte obrigatória do projeto. A implementação segue o padrão de interface descrito na ARQUITETURA.md:
 
-- **Dev** (`ARMAZENAMENTO_TIPO=local`): armazenamento em arquivos locais, sem dependencia de nuvem
-- **Producao** (`ARMAZENAMENTO_TIPO=oci`): armazenamento no OCI Object Storage, ativado apenas quando necessario
+- **Dev** (`ARMAZENAMENTO_TIPO=local`): armazenamento em H2 local, sem dependência de nuvem
+- **Produção** (`ARMAZENAMENTO_TIPO=autonomous_json`): armazenamento no Oracle Autonomous JSON Database, ativado apenas quando necessário
 
 ---
 
@@ -326,27 +326,27 @@ docker compose -f docker-compose.test.yml run frontend
 O sistema suporta dois modos de armazenamento controlados pela variável de ambiente `ARMAZENAMENTO_TIPO`:
 
 | Modo | ARMAZENAMENTO_TIPO | Onde os dados são salvos | Requer OCI? |
-|---|---|---|---|
-| **Dev** | `local` (default) | Diretório `./data/analises/` montado como volume Docker | Nao |
-| **Producao** | `oci` | OCI Object Storage (bucket) | Sim |
+|---|---|---|---|---|
+| **Dev** | `local` (default) | H2 em arquivo (`./data/nidus.db`) montado como volume Docker | Não |
+| **Produção** | `autonomous_json` | Oracle Autonomous JSON Database (coleção SODA) | Sim |
 
-Durante o desenvolvimento, todos os membros da equipe rodam em modo `local`. Nenhuma credencial OCI é necessaria. Na apresentacao, ativa-se o modo `oci` para demonstrar a integracao com o bucket real.
+Durante o desenvolvimento, todos os membros da equipe rodam em modo `local`. Nenhuma credencial OCI é necessária. Na apresentação, ativa-se o modo `autonomous_json` para demonstrar a integração com o AJD real.
 
 ---
 
-## Stack Tecnologica
+## Stack Tecnológica
 
 | Camada | Tecnologia | Finalidade |
 |---|---|---|
 | Frontend | React + Vite + TypeScript | Interface do usuário |
 | API | Java 17 + Spring Boot 3 | Regras de negócio, validação, recomendações |
 | ML Service | Python + FastAPI + Scikit-Learn | Classificação e perfil financeiro |
-| Banco de dados | Nenhum (armazenamento em arquivos JSON) | MVP simula OCI Object Storage |
+| Banco de dados | H2 (dev) / Oracle AJD (prod) | MVP usa H2 em arquivo; produção usa AJD via SODA |
 | Container | Docker + docker compose | Ambiente padronizado para toda a equipe |
 | Testes (Java) | JUnit 5 + Mockito + WireMock | Testes unitários e de integração |
 | Testes (Python) | pytest + TestClient | Testes do ml-service |
 | Testes (React) | Vitest + React Testing Library + MSW | Testes do frontend |
-| Cloud | OCI (Object Storage + Compute) | Produção / deploy |
+| Cloud | OCI (Autonomous JSON Database + Compute) | Produção / deploy |
 
 ---
 

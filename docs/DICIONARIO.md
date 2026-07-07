@@ -163,50 +163,50 @@ Toda recomendação gerada deve estar vinculada a um indicador identificado na a
 
 | ID | Gatilho | Recomendação |
 |---|---|---|
-| REC001 | Perfil "Em risco" | Priorizar quitacao de dividas para reduzir o comprometimento da renda |
-| REC002 | Perfil "Em risco" e frequencia_poupanca = "Nenhuma" | Estabelecer meta minima de poupanca mensal, mesmo que o valor seja pequeno |
-| REC003 | Perfil "Em observacao" e frequencia_poupanca = "Baixa" ou "Media" | Aumentar a frequencia de poupanca para criar reserva financeira |
-| REC004 | Concentracao de gastos em Lazer > 30% da renda | Reduzir gastos com lazer e entretenimento |
-| REC005 | Concentracao de gastos em Servicos > 25% da renda | Revisar assinaturas e servicos contratados |
-| REC006 | nivel_endividamento > 40 | Reduzir o nivel de endividamento antes de assumir novos compromissos |
-| REC007 | Perfil "Saudavel" e frequencia_poupanca = "Alta" | Manter o padrao atual de poupanca e gastos |
-| REC008 | Perfil "Saudavel" e frequencia_poupanca = "Media" | Considerar aumentar a reserva de emergencia |
+| REC001 | Perfil "Em risco" | Priorizar quitação de dívidas para reduzir o comprometimento da renda |
+| REC002 | Perfil "Em risco" e frequencia_poupanca = "Nenhuma" | Estabelecer meta mínima de poupança mensal, mesmo que o valor seja pequeno |
+| REC003 | Perfil "Em observacao" e frequencia_poupanca = "Baixa" ou "Media" | Aumentar a frequência de poupança para criar reserva financeira |
+| REC004 | Concentração de gastos em Lazer > 30% da renda | Reduzir gastos com lazer e entretenimento |
+| REC005 | Concentração de gastos em Servicos > 25% da renda | Revisar assinaturas e serviços contratados |
+| REC006 | nivel_endividamento > 40 | Reduzir o nível de endividamento antes de assumir novos compromissos |
+| REC007 | Perfil "Saudavel" e frequencia_poupanca = "Alta" | Manter o padrão atual de poupança e gastos |
+| REC008 | Perfil "Saudavel" e frequencia_poupanca = "Media" | Considerar aumentar a reserva de emergência |
 | REC009 | Categoria com maior gasto identificada | Monitorar gastos recorrentes em {categoria} |
-| REC010 | Nenhum gatilho especifico ativado | Manter o acompanhamento regular dos seus gastos |
+| REC010 | Nenhum gatilho específico ativado | Manter o acompanhamento regular dos seus gastos |
 
-### 9.2 Regras de Ativacao
+### 9.2 Regras de Ativação
 
-- Podem ser ativadas multiplas recomendacoes em uma mesma analise
-- A ordem de exibicao deve priorizar recomendacoes vinculadas ao perfil (REC001 a REC003), depois as vinculadas a indicadores especificos (REC004 a REC009), por ultimo a generica (REC010)
-- REC010 so deve ser exibida quando nenhuma outra recomendacao for ativada
+- Podem ser ativadas múltiplas recomendações em uma mesma análise
+- A ordem de exibição deve priorizar recomendações vinculadas ao perfil (REC001 a REC003), depois as vinculadas a indicadores específicos (REC004 a REC009), por último a genérica (REC010)
+- REC010 só deve ser exibida quando nenhuma outra recomendação for ativada
 
 ---
 
-## 10. Dominio: Padroes de Consumo
+## 10. Domínio: Padrões de Consumo
 
-### 10.1 Definicao dos Padroes
+### 10.1 Definição dos Padrões
 
-Cada padrao e calculado a partir das transacoes classificadas e dos dados financeiros de entrada, dentro de uma unica requisicao.
+Cada padrão é calculado a partir das transações classificadas e dos dados financeiros de entrada, dentro de uma única requisição.
 
-| ID | Padrao | Definicao | Regra de Calculo | Exemplo de Saida |
+| ID | Padrão | Definição | Regra de Cálculo | Exemplo de Saída |
 |---|---|---|---|---|
-| PC001 | Concentracao de categoria | Categoria que consome parcela desproporcional do total gasto | percentual_categoria = valor_categoria / soma_total_transacoes; concentracao se > 30% | "Concentracao em Lazer (35% do total gasto)" |
-| PC002 | Comprometimento de renda por essenciais | Proporcao da renda mensal usada em categorias essenciais (Moradia, Saude, Transporte, Educacao) | soma_essenciais / renda_mensal | "Gastos essenciais comprometem 42% da renda" |
-| PC003 | Comprometimento de renda por nao essenciais | Proporcao da renda usada em Lazer e Servicos | soma_nao_essenciais / renda_mensal | "Gastos nao essenciais comprometem 8% da renda" |
-| PC004 | Gasto recorrente | Descricao de transacao repetida (normalizada, secao 7) mais de uma vez na mesma requisicao | contagem_descricao_normalizada > 1 | "Padrao recorrente: Streaming (2 ocorrencias)" |
-| PC005 | Transacao atipica | Transacao cujo valor e muito superior a media das demais | valor > (media_transacoes * 2) | "Transacao atipica: Viagem (valor muito acima da media)" |
+| PC001 | Concentracao de categoria | Categoria que consome parcela desproporcional do total gasto | percentual_categoria = valor_categoria / soma_total_transacoes; concentracao se > 30% | "Concentração em Lazer (35% do total gasto)" |
+| PC002 | Comprometimento de renda por essenciais | Proporção da renda mensal usada em categorias essenciais (Moradia, Saude, Transporte, Educacao) | soma_essenciais / renda_mensal | "Gastos essenciais comprometem 42% da renda" |
+| PC003 | Comprometimento de renda por nao essenciais | Proporção da renda usada em Lazer e Servicos | soma_nao_essenciais / renda_mensal | "Gastos não essenciais comprometem 8% da renda" |
+| PC004 | Gasto recorrente | Descrição de transação repetida (normalizada, seção 7) mais de uma vez na mesma requisição | contagem_descricao_normalizada > 1 | "Padrão recorrente: Streaming (2 ocorrências)" |
+| PC005 | Transacao atipica | Transação cujo valor é muito superior à média das demais | valor > (media_transacoes * 2) | "Transação atípica: Viagem (valor muito acima da média)" |
 | PC006 | Categoria dominante | Categoria com maior soma de valor entre todas | max(resumo_gastos) | "Categoria de maior gasto: Alimentacao" |
 
-### 10.2 Regras de Ativacao dos Padroes
+### 10.2 Regras de Ativação dos Padrões
 
-- Um padrao so e considerado "identificado" quando sua regra de calculo e atendida
-- Podem ser ativados multiplos padroes em uma mesma analise
-- A lista de padroes identificados e exposta no campo `padroes_identificados` da resposta (ver CONTRATOS.md)
-- Todo padrao ativado deve gerar ao menos uma recomendacao vinculada (RN004), mas nem toda recomendacao precisa derivar de um padrao (ex: REC001 deriva do perfil, nao de um padrao especifico)
+- Um padrão só é considerado "identificado" quando sua regra de cálculo é atendida
+- Podem ser ativados múltiplos padrões em uma mesma análise
+- A lista de padrões identificados é exposta no campo `padroes_identificados` da resposta (ver CONTRATOS.md)
+- Todo padrão ativado deve gerar ao menos uma recomendação vinculada (RN004), mas nem toda recomendação precisa derivar de um padrão (ex: REC001 deriva do perfil, não de um padrão específico)
 
 ---
 
-## 11. Glossario de Termos do Dominio
+## 11. Glossário de Termos do Domínio
 
 | Termo | Definição |
 |---|---|

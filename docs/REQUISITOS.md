@@ -50,9 +50,9 @@ flowchart TD
     A[Entrada de dados financeiros] --> B{Validação dos dados}
     B -- Dados invalidos --> C[Retorno de erro estruturado]
     B -- Dados validos --> D[Classificacao de transacoes por categoria]
-    D --> E[Identificacao de padroes de consumo]
-    E --> F[Calculo de indicadores financeiros]
-    F --> G[Identificacao de padroes de consumo]
+    D --> E[Agregacao de gastos por categoria]
+    E --> F[Identificacao de padroes de consumo]
+    F --> G[Calculo de indicadores financeiros]
     G --> H[Classificacao do perfil financeiro]
     H --> I[Geracao de recomendacoes vinculadas aos indicadores e padroes]
     I --> J[Retorno estruturado dos resultados]
@@ -235,11 +235,11 @@ Requisitos derivados das decisões arquiteturais do projeto.
 |---|---|---|---|
 | RA001 | Containerização com Docker | O sistema deve ser executado em containers Docker orquestrados por docker compose, garantindo ambiente idêntico em todas as máquinas de desenvolvimento. | Alta |
 | RA002 | Separação entre API e ML | O serviço de ML (FastAPI) deve rodar em container separado da API (Spring Boot), comunicando-se exclusivamente via HTTP. | Alta |
-| RA003 | Interface de armazenamento | O armazenamento dos resultados deve ser implementado via interface, permitindo troca entre implementação local (arquivos) e OCI Object Storage sem alterar o código de negócio. | Alta |
+| RA003 | Interface de armazenamento | O armazenamento dos resultados deve ser implementado via interface, permitindo troca entre implementação local (H2) e Oracle Autonomous JSON Database (AJD) sem alterar o código de negócio. | Alta |
 | RA004 | ML Service stateless | O ml-service não deve manter estado entre requisições; os modelos devem ser carregados na inicialização. | Alta |
 | RA005 | Proxy reverso no frontend | O frontend em produção deve ser servido por Nginx, que faz proxy reverso para a API, eliminando problemas de CORS. | Média |
 | RA006 | Sem autenticação no MVP | O MVP não implementa autenticação; a segurança será adicionada na migração para OCI. | Baixa |
-| RA007 | Modo dev/prod do armazenamento | O sistema deve suportar dois modos de armazenamento controlados por variavel de ambiente: `local` (diretorio local, sem OCI) e `oci` (Object Storage real). Ambos devem ser implementados e compilados desde o MVP. | Alta |
+| RA007 | Modo dev/prod do armazenamento | O sistema deve suportar dois modos de armazenamento controlados por variavel de ambiente: `local` (H2 em arquivo, sem nuvem) e `autonomous_json` (AJD real com wallet). Ambos devem ser implementados e compilados desde o MVP. | Alta |
 | RA008 | Health check no ml-service | O ml-service deve expor um endpoint `/ml/health` para verificação de prontidão; o docker compose deve usar `healthcheck` + `condition: service_healthy` para garantir que a API só chame o ml-service após os modelos serem carregados. | Alta |
 | RA009 | Tratamento de timeout do ml-service | A API deve configurar timeout de conexão ao chamar o ml-service e retornar HTTP 504 com código `SERVICO_ML_INDISPONIVEL` em caso de falha. | Alta |
 

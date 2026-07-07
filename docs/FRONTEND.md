@@ -234,7 +234,7 @@ export default defineConfig({
 });
 ```
 
-O frontend faz requisicoes para `/api/analise-financeira` e o Vite redireciona para o Spring Boot removendo o prefixo `/api`, de forma que a chamada chega como `/analise-financeira` no backend. Sem a funcao `rewrite`, o Vite encaminharia o caminho completo com `/api`, causando 404. Em producao, o Nginx faz o mesmo papel com `proxy_pass http://api:8080/` (barra no final remove o prefixo automaticamente).
+O frontend faz requisições para `/api/analise-financeira` e o Vite redireciona para o Spring Boot removendo o prefixo `/api`, de forma que a chamada chega como `/analise-financeira` no backend. Sem a função `rewrite`, o Vite encaminharia o caminho completo com `/api`, causando 404. Em produção, o Nginx faz o mesmo papel com `proxy_pass http://api:8080/` (barra no final remove o prefixo automaticamente).
 
 ---
 

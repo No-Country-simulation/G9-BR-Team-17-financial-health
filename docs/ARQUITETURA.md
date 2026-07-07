@@ -21,7 +21,7 @@ O sistema é composto por três serviços independentes que rodam em containers 
 │                             ▼                                    │
 │                      ┌──────────────┐                           │
 │                      │  Armazenamento                           │
-│                      │  Local ou OCI │                           │
+│                      │  Local ou AJD │                           │
 │                      └──────────────┘                           │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -91,14 +91,15 @@ sequenceDiagram
 
 ```java
 public interface Armazenamento {
-    void salvar(String id, String conteudo);
+    void salvar(String id, String conteudoJson);
     Optional<String> carregar(String id);
+    List<String> listarHistorico(int limite);
 }
 ```
 
-- `ArmazenamentoLocal` → salva em arquivos (MVP)
-- `ArmazenamentoOCI` → salva no Object Storage (produção)
-- Trocado via `@Profile("oci")` ou variável de ambiente `ARMAZENAMENTO_TIPO`
+- `ArmazenamentoLocal` → usa H2 em arquivo, roda no container `api` sem dependência externa
+- `ArmazenamentoAJD` → usa SODA para Java, conecta na Oracle Autonomous JSON Database via wallet
+- Trocado via variável de ambiente `ARMAZENAMENTO_TIPO`
 - Zero alteração no código de negócio ao migrar
 
 ---
@@ -146,50 +147,58 @@ nidus/
 
 ### 4.1 Local (modo dev, `ARMAZENAMENTO_TIPO=local`)
 
-- Diretório `./data/analises/` montado como volume Docker no serviço `api`
-- Cada análise salva como `{id}.json`
-- Simula o comportamento do OCI Object Storage
-- Nenhuma credencial OCI necessária
+- Banco H2 em arquivo (`./data/nidus.db`), montado como volume Docker no serviço `api`
+- Cada análise salva como documento JSON em uma tabela simulada pelo H2
+- Nenhuma credencial externa necessária
 
-### 4.2 OCI Object Storage (modo producao, `ARMAZENAMENTO_TIPO=oci`)
+### 4.2 Oracle Autonomous JSON Database (modo produção, `ARMAZENAMENTO_TIPO=autonomous_json`)
 
-- Mesma interface `Armazenamento`
-- Configurado via variáveis de ambiente:
-  - `OCI_BUCKET_NAME`
-  - `OCI_NAMESPACE`
-  - `OCI_CONFIG_PATH`
-- Trocado via variavel `ARMAZENAMENTO_TIPO=oci` ou profile `oci` no Spring Boot
-- Deve ser implementado e compilado no codigo desde o MVP, mesmo que usado apenas na apresentacao
+- Serviço OCI utilizado: Autonomous JSON Database (AJD)
+- API de acesso: SODA para Java (driver `com.oracle.database.soda`)
+- Estrutura de dados: coleção SODA `analises`, um documento JSON por análise
+- Autenticação: wallet (arquivo de configuração de conexão), nunca versionado no repositório
+- Ativado por: `ARMAZENAMENTO_TIPO=autonomous_json`
+- Deve ser implementado e compilado no código desde o MVP, mesmo que usado apenas na apresentação
+
+### 4.3 Estrutura do Documento na Coleção SODA
+
+Cada análise salva como um documento JSON na coleção `analises`:
+
+| Campo do documento | Descrição |
+|---|---|---|
+| id | Identificador único da análise (UUID v4) |
+| criado_em | Timestamp ISO 8601 da análise |
+| requisição | Corpo original enviado pelo cliente |
+| resposta | Corpo completo retornado ao cliente |
 
 ---
 
-### 4.3 Regra de derivacao das chaves do resumo_gastos
+### 4.4 Regra de derivação das chaves do resumo_gastos
 
-As chaves do objeto `resumo_gastos` sao derivadas do nome oficial da categoria (conforme secao 3 do DICIONARIO.md) aplicando:
+As chaves do objeto `resumo_gastos` são derivadas do nome oficial da categoria (conforme seção 3 do DICIONARIO.md) aplicando:
 
-1. Conversao para minusculas
-2. Remocao de acentos
-3. Substituicao de espacos por underline (caso existam)
+1. Conversão para minúsculas
+2. Remoção de acentos
+3. Substituição de espaços por underline (caso existam)
 
 Exemplo: `"Alimentacao"` → `"alimentacao"`, `"Em observacao"` → `"em_observacao"`.
 
 ---
 
-## 5. Estrategia de Migracao para OCI
+## 5. Estratégia de Migração para OCI
 
 | Componente | Local (MVP) | OCI (Produção) | Mudança |
 |---|---|---|---|
 | API | Container Docker | OCI Compute (mesma imagem) | Apenas deploy |
 | ML Service | Container Docker | OCI Compute (mesma imagem) | Apenas deploy |
 | Frontend | Container Docker | OCI Compute + Nginx | Apenas deploy |
-| Armazenamento | Pasta `./data/` | OCI Object Storage | Trocar implementação via interface |
-| Banco de dados | Não usado | OCI Autonomous DB (opcional) | Se necessário no futuro |
+| Armazenamento | H2 em arquivo (`./data/nidus.db`) | Oracle Autonomous JSON Database (AJD) via SODA | Trocar implementação via interface |
 
 Nenhuma linha de código de negócio precisa ser alterada. A migração é puramente operacional.
 
 ### 5.1 Tratamento de timeout do ml-service
 
-A API (Spring Boot) deve configurar timeout de conexao e leitura ao chamar o ml-service. Caso o ml-service nao responda dentro do limite (ex: 5s), a API deve retornar HTTP 504 com o codigo de erro `SERVICO_ML_INDISPONIVEL`, conforme catalogo do CONTRATOS.md.
+A API (Spring Boot) deve configurar timeout de conexão e leitura ao chamar o ml-service. Caso o ml-service não responda dentro do limite (ex: 5s), a API deve retornar HTTP 504 com o código de erro `SERVICO_ML_INDISPONIVEL`, conforme catálogo do CONTRATOS.md.
 
 ---
 
@@ -205,7 +214,7 @@ A API (Spring Boot) deve configurar timeout de conexao e leitura ao chamar o ml-
 
 - RNF-SEG-003: controle de acesso via API Key ou JWT
 - RNF-SEG-001: HTTPS via load balancer da OCI
-- RNF-SEG-002: criptografia em repouso no Object Storage
+- RNF-SEG-002: criptografia em repouso nativa do Oracle Autonomous JSON Database
 - A ser definido em versão futura
 
 ---
@@ -215,7 +224,7 @@ A API (Spring Boot) deve configurar timeout de conexao e leitura ao chamar o ml-
 | Variável | Serviço | Descrição | Default (MVP) |
 |---|---|---|---|
 | `ML_SERVICE_URL` | api | URL do ml-service | `http://ml-service:8000` |
-| `ARMAZENAMENTO_TIPO` | api | local ou oci | `local` |
+| `ARMAZENAMENTO_TIPO` | api | local ou autonomous_json | `local` |
 | `VITE_API_URL` | frontend | URL da API | `http://localhost:8080` |
 
 ---
@@ -241,7 +250,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./data/analises:/app/data/analises
+      - ./data/nidus.db:/app/data/nidus.db
     environment:
       - ML_SERVICE_URL=http://ml-service:8000
       - ARMAZENAMENTO_TIPO=local
