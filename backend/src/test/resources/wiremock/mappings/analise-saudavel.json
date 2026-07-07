@@ -1,0 +1,20 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/ml/analise"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "perfil_financeiro": "Saudavel",
+            "probabilidade": 0.91,
+            "transacoes_classificadas": [
+                { "descricao": "Aluguel", "valor": 1500, "categoria": "Moradia" },
+                { "descricao": "Farmacia", "valor": 120, "categoria": "Saude" }
+            ]
+        },
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

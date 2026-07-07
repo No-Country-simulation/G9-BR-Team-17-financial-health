@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: nidus
+      POSTGRES_DB: nidus-test
       POSTGRES_USER: nidus
       POSTGRES_PASSWORD: nidus
     healthcheck:
@@ -11,28 +11,33 @@ services:
       retries: 10
       start_period: 10s
 
-  ml-service:
-    build:
-      context: ./ml-service
-      dockerfile: Dockerfile
-    command: pytest tests/ -v --cov
-
   wiremock:
     image: wiremock/wiremock:latest
     command: ["--port", "8080"]
     volumes:
-      - ./backend/src/test/resources/wiremock:/home/wiremock
+      - ./backend/src/test/resources/wiremock/mappings:/home/wiremock/mappings
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/__admin/"]
+      interval: 5s
+      retries: 10
+      start_period: 5s
+
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    command: pytest tests/ -v --cov --cov-report=term
 
   api:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test
     environment:
       - ML_SERVICE_URL=http://wiremock:8080
-      - DB_URL=jdbc:postgresql://db:5432/nidus
+      - DB_URL=jdbc:postgresql://db:5432/nidus-test
       - DB_USER=nidus
       - DB_PASSWORD=nidus
-    command: mvn test
+      - SPRING_PROFILES_ACTIVE=test
     depends_on:
       wiremock:
         condition: service_started
