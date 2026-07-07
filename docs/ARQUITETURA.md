@@ -30,23 +30,24 @@ O sistema é composto por três serviços independentes que rodam em containers 
 
 ```mermaid
 sequenceDiagram
-    participant U as Usuário
+    participant U as Usuario
     participant F as Frontend (React)
     participant B as API (Spring Boot)
     participant M as ML Service (FastAPI)
     participant S as Storage
 
-    U->>F: Preenche formulário
+    U->>F: Preenche formulario
     F->>F: Valida campos no cliente
     F->>B: POST /api/analise-financeira
     B->>B: Valida entrada (Bean Validation)
     B->>M: POST /ml/analise
     M->>M: Carrega modelos .pkl
-    M->>M: Classifica transações + perfil
-    M-->>B: JSON com classificação + probabilidade
-    B->>B: Gera recomendações
-    B->>S: Salva resultado da análise
-    B-->>F: JSON com perfil + gastos + recomendações
+    M->>M: Classifica transacoes + perfil
+    M-->>B: JSON com classificacao + probabilidade
+    B->>B: Identifica padroes de consumo
+    B->>B: Gera recomendacoes
+    B->>S: Salva resultado da analise
+    B-->>F: JSON com perfil + gastos + padroes + recomendacoes
     F->>F: Renderiza resultado
     F-->>U: Exibe tela com dados financeiros
 ```
