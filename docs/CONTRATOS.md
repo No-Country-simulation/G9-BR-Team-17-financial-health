@@ -219,6 +219,7 @@ Saída:
     "Monitorar gastos recorrentes em Alimentacao"
   ]
 }
+```
 
 **Exemplo 2: Perfil "Saudavel"**
 
