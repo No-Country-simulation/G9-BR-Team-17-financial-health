@@ -13,7 +13,7 @@ Show,541.29,Lazer
 Manutencao,497.17,Transporte
 Boleto Avulso,1379.44,Outras
 Reforma,121.32,Moradia
-Acougue,1138.69,Alimentacao
+Quentinha,429.86,Alimentacao
 Viagem,1829.95,Lazer
 Transferencia,1127.12,Outras
 Aula Particular,804.81,Educacao
@@ -32,14 +32,15 @@ Gas,1428.77,Moradia
 Fatura Cartao,1039.98,Servicos
 Estacionamento,1180.73,Transporte
 Gas,465.59,Moradia
-ACOUGUE,436.33,Alimentacao
-Psicologo,820.05,Saude
-Uber,828.09,Transporte
-restaurante,227.45,Alimentacao
-Condominio,375.14,Moradia
-Transferencia,1713.37,Outras
-Combustivel,39.37,Transporte
-ESTACIONAMENTO,808.07,Transporte
+Quitanda,564.17,Alimentacao
+Transferencia,1765.94,Outras
+Transferencia,388.92,Outras
+Pedagio,1729.04,Transporte
+Almoco,130.62,Alimentacao
+Cinema,902.74,Lazer
+Tarifa Bancaria,1847.3,Servicos
+pagamento diverso,1938.3,Outras
+Condominio,1730.65,Moradia
 Padaria,537.75,Alimentacao
 PIX,1990.89,Outras
 TRANSFERENCIA,131.31,Outras
@@ -66,7 +67,7 @@ Plano de Saude,671.05,Saude
 Fatura Cartao,540.94,Servicos
 Pedagio,452.64,Transporte
 PIX,462.92,Outras
-Ifood,148.15,Alimentacao
+ALMOCO,1934.11,Alimentacao
 Livros,1962.49,Educacao
 streaming,1925.44,Lazer
 MENSALIDADE ESCOLAR,634.22,Educacao
@@ -92,7 +93,8 @@ Transferencia!!!,550.71,Outras
 TEATRO,314.08,Lazer
 Aluguel,937.19,Moradia
 Ifood,1541.89,Alimentacao
-Sushi!!!,1509.42,Alimentacao
+Quitanda,959.19,Alimentacao
+Hotel,1907.33,Lazer
 Convenio,1210.47,Servicos
 Agua,67.76,Moradia
 Spotify,1839.89,Lazer
@@ -142,16 +144,16 @@ consulta medica,1650.24,Saude
 faculdade,1885.93,Educacao
 BOLETO AVULSO,651.42,Outras
 mensalidade escolar,1154.65,Educacao
-Feira,358.63,Alimentacao
-pix,988.53,Outras
-Metro,1343.57,Transporte
-Exame,1328.54,Saude
-CONVENIO,240.68,Servicos
-Convenio,929.33,Servicos
-Ifood,1002.0,Alimentacao
-Pagamento Diverso,1856.07,Outras
-boleto avulso,486.2,Outras
-Hospital,195.49,Saude
+Quentinha,90.06,Alimentacao
+Psicologo,563.53,Saude
+Fatura Cartao,945.32,Servicos
+Assinatura Software,330.04,Servicos
+Fatura Cartao,806.9,Servicos
+PIZZARIA,1547.37,Alimentacao
+Almoco,117.87,Alimentacao
+Parque,415.08,Lazer
+Hospital,251.64,Saude
+reforma,195.49,Moradia
 Metro,316.4,Transporte
 Material Didatico,970.17,Educacao
 Transferencia,389.31,Outras
@@ -172,10 +174,10 @@ METRO!!!,121.68,Transporte
 Netflix,829.98,Lazer
 plano de saude,1369.44,Saude
 Transferencia,924.55,Outras
-Pizzaria,324.37,Alimentacao
-PIX,1924.44,Outras
-Faculdade,775.54,Educacao
-Pagamento Diverso,1153.88,Outras
+Quentinha,1097.73,Alimentacao
+Metro,605.32,Transporte
+Fatura Cartao,406.44,Servicos
+SEGURO,598.79,Servicos
 Mensalidade Escolar,556.22,Educacao
 Sushi,1806.84,Alimentacao
 Gas,388.36,Moradia
@@ -259,22 +261,22 @@ Fatura Cartao,1343.53,Servicos
 Pedagio!!!,1902.83,Transporte
 parque,598.63,Lazer
 99,1768.53,Transporte
-Acougue,1198.52,Alimentacao
-plano de saude,1806.29,Saude
-Pagamento Diverso,482.69,Outras
-PIX,475.67,Outras
-Energia Eletrica,1808.91,Moradia
-Energia Eletrica,886.79,Moradia
-Idiomas,1932.87,Educacao
-IPTU,113.84,Moradia
-PIX,1693.33,Outras
-ONIBUS,1031.57,Transporte
-Cartao de Credito,907.74,Servicos
-Streaming,754.18,Lazer
-Cartao de Credito,1679.96,Servicos
-SHOW,1395.18,Lazer
-Psicologo!!!,519.29,Saude
-Medicamento,852.28,Saude
+Almoco,270.79,Alimentacao
+tarifa bancaria,1620.0,Servicos
+PSICOLOGO,1939.48,Saude
+Idiomas,1072.68,Educacao
+Idiomas,396.09,Educacao
+Boleto Avulso,1010.78,Outras
+Tarifa Bancaria,285.41,Servicos
+Mensalidade Escolar,1113.54,Educacao
+99,1528.6,Transporte
+Faculdade,880.57,Educacao
+IPTU,63.07,Moradia
+Hortifruti,1989.11,Alimentacao
+viagem,1303.42,Lazer
+plano de saude,1663.91,Saude
+Boleto Avulso,47.82,Outras
+iptu,852.28,Moradia
 Curso Online!!!,1589.86,Educacao
 pagamento diverso,42.71,Outras
 REFORMA,488.72,Moradia
@@ -286,8 +288,8 @@ Show,1961.83,Lazer
 Transferencia,920.78,Outras
 CURSO ONLINE,1035.61,Educacao
 pix,1725.66,Outras
-Acougue,879.53,Alimentacao
-Fatura Cartao,684.68,Servicos
+Quitanda,1600.69,Alimentacao
+Seguro,779.42,Servicos
 Psicologo,1596.61,Saude
 IDIOMAS,1990.25,Educacao
 Medicamento,662.56,Saude
@@ -315,11 +317,12 @@ Plano de Saude,120.27,Saude
 Teatro,508.7,Lazer
 Curso Online,195.92,Educacao
 plano de saude,681.86,Saude
-supermercado,536.67,Alimentacao
-IPTU,70.27,Moradia
-Aula Particular,1611.33,Educacao
-Assinatura Software,324.58,Servicos
-Seguro,295.9,Servicos
+Quitanda,1544.33,Alimentacao
+Aula Particular,1240.04,Educacao
+Pizzaria,1287.4,Alimentacao
+Faculdade,818.12,Educacao
+Pagamento Diverso,837.09,Outras
+Transferencia,1724.36,Outras
 Netflix,747.37,Lazer
 Oficina Mecanica,904.7,Transporte
 consulta medica,842.09,Saude
@@ -344,10 +347,9 @@ REFORMA,1445.15,Moradia
 Tarifa Bancaria,1149.41,Servicos
 ESTACIONAMENTO,1384.1,Transporte
 Convenio,1746.91,Servicos
-Padaria,1996.26,Alimentacao
-Boleto Avulso,1825.13,Outras
-Teatro,1444.64,Lazer
-Material Didatico,565.22,Educacao
+MARMITA,1327.83,Alimentacao
+Assinatura Software,1070.92,Servicos
+Hotel,500.57,Lazer
 Curso Online,1544.64,Educacao
 Reforma,704.12,Moradia
 livros,1960.52,Educacao
@@ -360,7 +362,7 @@ Farmacia,324.3,Saude
 Boleto Avulso,581.62,Outras
 aula particular,472.12,Educacao
 Padaria,1868.51,Alimentacao
-Hortifruti,1500.52,Alimentacao
+Quitanda,1873.85,Alimentacao
 mensalidade escolar,1966.16,Educacao
 Faculdade,992.89,Educacao
 Medicamento,234.17,Saude
@@ -403,8 +405,8 @@ Idiomas,1830.33,Educacao
 Seguro,493.29,Servicos
 Energia Eletrica,1695.8,Moradia
 99,544.24,Transporte
-restaurante,1122.11,Alimentacao
-Transferencia,1914.47,Outras
+quitanda,1346.19,Alimentacao
+Agua,613.34,Moradia
 Ifood,243.46,Alimentacao
 Transferencia,799.3,Outras
 Gas,937.84,Moradia
@@ -424,7 +426,7 @@ Consulta Medica,489.53,Saude
 Idiomas,167.25,Educacao
 Seguro,459.46,Servicos
 COMBUSTIVEL,121.67,Transporte
-padaria,669.23,Alimentacao
+MARMITA,1570.91,Alimentacao
 99,1803.53,Transporte
 PIX,1799.63,Outras
 Padaria,1923.32,Alimentacao
@@ -456,7 +458,7 @@ Idiomas,1593.36,Educacao
 Fatura Cartao,491.62,Servicos
 Dentista,963.68,Saude
 Convenio,1386.5,Servicos
-Acougue,1191.7,Alimentacao
+Quentinha,1626.47,Alimentacao
 Uber,716.47,Transporte
 Sushi,805.24,Alimentacao
 SPOTIFY,1496.24,Lazer
@@ -465,9 +467,9 @@ Exame,597.91,Saude
 Uber,703.17,Transporte
 Parque,703.12,Lazer
 Metro,143.68,Transporte
-RESTAURANTE,1602.1,Alimentacao
-GAS,1917.34,Moradia
-IPTU,1284.55,Moradia
+Quentinha!!!,227.63,Alimentacao
+Academia,668.67,Saude
+Seguro,377.06,Servicos
 seguro,1188.48,Servicos
 Cartao de Credito,1507.13,Servicos
 manutencao,658.71,Transporte
@@ -478,16 +480,15 @@ Gasolina,242.73,Transporte
 Show,284.36,Lazer
 seguro,1294.07,Servicos
 MEDICAMENTO,1685.55,Saude
-Acougue,398.31,Alimentacao
-Convenio,1372.55,Servicos
-Fatura Cartao,174.51,Servicos
-Ifood,1079.84,Alimentacao
-Psicologo,995.67,Saude
-manutencao,740.05,Transporte
-Pizzaria,213.81,Alimentacao
-Energia Eletrica!!!,1725.78,Moradia
-Metro,1625.66,Transporte
-IPTU,1723.49,Moradia
+Quitanda!!!,1632.28,Alimentacao
+Boleto Avulso,1681.38,Outras
+TRANSFERENCIA,591.26,Outras
+Curso Online,920.07,Educacao
+Pagamento Diverso,1090.78,Outras
+Teatro,1097.24,Lazer
+Cartao de Credito,502.59,Servicos
+Pizzaria,183.1,Alimentacao
+Estacionamento,1381.38,Transporte
 Tarifa Bancaria,1628.92,Servicos
 Sushi,1082.15,Alimentacao
 Hotel,1717.45,Lazer
@@ -515,13 +516,13 @@ Viagem,829.3,Lazer
 TRANSFERENCIA,1183.25,Outras
 Assinatura Software,288.26,Servicos
 aula particular,1219.11,Educacao
-Feira,385.41,Alimentacao
-Assinatura Software,1589.62,Servicos
+Quitanda,418.84,Alimentacao
+Reforma,1569.77,Moradia
 Agua,1279.78,Moradia
 99!!!,639.78,Transporte
 Convenio,353.81,Servicos
 PAGAMENTO DIVERSO,89.26,Outras
-Hortifruti,1007.09,Alimentacao
+Quentinha,1428.13,Alimentacao
 Seguro,1235.93,Servicos
 Mensalidade Escolar,414.36,Educacao
 Medicamento,1528.82,Saude
@@ -573,10 +574,11 @@ Fatura Cartao,974.51,Servicos
 Spotify,68.31,Lazer
 Mensalidade Escolar,721.29,Educacao
 condominio,1634.41,Moradia
-Ifood,782.96,Alimentacao
-Plano de Saude,1478.83,Saude
-Streaming,1139.63,Lazer
-Academia,1941.07,Saude
+Quentinha,1694.55,Alimentacao
+Assinatura Software,355.69,Servicos
+Gas,723.98,Moradia
+Marmita,1131.58,Alimentacao
+IPTU,989.53,Moradia
 Curso Online!!!,445.43,Educacao
 Pagamento Diverso,1614.83,Outras
 Show,653.94,Lazer
@@ -607,7 +609,7 @@ Mensalidade Escolar,748.33,Educacao
 ASSINATURA SOFTWARE,534.17,Servicos
 material didatico,180.56,Educacao
 Teatro,462.75,Lazer
-Hortifruti,1075.67,Alimentacao
+Quitanda,1931.6,Alimentacao
 Transferencia,1431.47,Outras
 Consulta Medica,1898.63,Saude
 Academia,852.52,Saude
@@ -620,8 +622,8 @@ Uber,579.32,Transporte
 Spotify,1148.33,Lazer
 PAGAMENTO DIVERSO,1364.82,Outras
 Cartao de Credito,1384.12,Servicos
-Pizzaria,50.26,Alimentacao
-Livros,1395.4,Educacao
+Marmita,751.16,Alimentacao
+Hotel,1717.89,Lazer
 estacionamento,1653.39,Transporte
 Aula Particular,383.99,Educacao
 IPTU,1037.84,Moradia
@@ -742,7 +744,7 @@ Aluguel,1832.71,Moradia
 Pedagio,59.16,Transporte
 Teatro,97.26,Lazer
 Energia Eletrica,343.12,Moradia
-Restaurante,434.22,Alimentacao
+almoco,1731.25,Alimentacao
 Cartao de Credito,1758.49,Servicos
 Fatura Cartao,57.27,Servicos
 STREAMING,1120.59,Lazer
@@ -767,11 +769,11 @@ Assinatura Software,1468.62,Servicos
 Boleto Avulso,979.07,Outras
 Gasolina!!!,1654.62,Transporte
 Energia Eletrica,1457.58,Moradia
-Lanche,1162.01,Alimentacao
+Quitanda,816.22,Alimentacao
 Aluguel,1997.47,Moradia
 Transferencia,1546.57,Outras
 Curso Online,799.6,Educacao
-Ifood,1231.93,Alimentacao
+Almoco,1963.89,Alimentacao
 MEDICAMENTO,1135.97,Saude
 Psicologo,471.18,Saude
 Livros,1040.59,Educacao
@@ -794,11 +796,12 @@ Pagamento Diverso,226.05,Outras
 Gas,845.39,Moradia
 consulta medica,1756.73,Saude
 Uber,1210.91,Transporte
-Hortifruti,96.44,Alimentacao
-Tarifa Bancaria,1539.66,Servicos
-Cinema,1534.06,Lazer
-Onibus,523.03,Transporte
-Supermercado,24.32,Alimentacao
+Quentinha,847.16,Alimentacao
+Marmita,1606.58,Alimentacao
+Assinatura Software,1525.46,Servicos
+PEDAGIO,1719.52,Transporte
+Material Didatico,386.15,Educacao
+Sushi,756.31,Alimentacao
 Reforma,222.1,Moradia
 Fatura Cartao,1076.85,Servicos
 Hotel,415.35,Lazer
@@ -823,19 +826,19 @@ Convenio,685.92,Servicos
 Boleto Avulso,969.12,Outras
 Mensalidade Escolar,448.56,Educacao
 IPTU,1037.84,Moradia
-Feira,1643.94,Alimentacao
-99,713.54,Transporte
-Curso Online,1820.76,Educacao
-Transferencia,538.16,Outras
-Condominio,718.49,Moradia
-Uber,1330.21,Transporte
-Lanche,748.68,Alimentacao
-Parque,1153.29,Lazer
+Marmita,195.09,Alimentacao
+Cinema,634.61,Lazer
+Gas,1369.38,Moradia
+Agua,491.69,Moradia
+Curso Online,1674.31,Educacao
+Show,166.19,Lazer
+Pagamento Diverso,94.1,Outras
+PIX,1970.87,Outras
 faculdade,801.78,Educacao
 Farmacia,1879.91,Saude
 Lanche,1554.05,Alimentacao
 Pagamento Diverso,1381.53,Outras
-Ifood,729.59,Alimentacao
+Almoco,657.62,Alimentacao
 Curso Online,947.98,Educacao
 NETFLIX,1506.87,Lazer
 Spotify,270.97,Lazer
@@ -855,8 +858,8 @@ Material Didatico,895.35,Educacao
 Teatro,375.93,Lazer
 Padaria,1881.47,Alimentacao
 ESTACIONAMENTO,1101.38,Transporte
-Hortifruti,216.82,Alimentacao
-Consulta Medica,625.65,Saude
+Quentinha,175.67,Alimentacao
+material didatico,625.65,Educacao
 Reforma,271.24,Moradia
 FARMACIA,1729.84,Saude
 PIX,1897.49,Outras
@@ -913,12 +916,12 @@ Gas,1104.98,Moradia
 Livros,800.21,Educacao
 Feira,1986.89,Alimentacao
 Mensalidade Escolar,1712.88,Educacao
-Feira,1145.63,Alimentacao
+Quentinha,559.15,Alimentacao
 CONSULTA MEDICA,740.49,Saude
 Condominio,1145.27,Moradia
 REFORMA,981.67,Moradia
 Manutencao,769.28,Transporte
-Acougue,838.88,Alimentacao
+Quentinha,874.27,Alimentacao
 Estacionamento,1858.02,Transporte
 Cartao de Credito,307.66,Servicos
 condominio,896.78,Moradia
@@ -999,7 +1002,7 @@ IPTU,100.53,Moradia
 Teatro,1284.83,Lazer
 Livros,1018.31,Educacao
 STREAMING,1142.15,Lazer
-padaria,963.43,Alimentacao
+QUITANDA,1348.22,Alimentacao
 Pagamento Diverso,1258.13,Outras
 Parque,1487.74,Lazer
 Material Didatico,1076.41,Educacao
@@ -1009,9 +1012,9 @@ Fatura Cartao,1215.32,Servicos
 Consulta Medica,1413.48,Saude
 Streaming,749.45,Lazer
 Curso Online,754.69,Educacao
-Ifood,59.62,Alimentacao
-transferencia,1052.02,Outras
-Show,1037.13,Lazer
+Quentinha,1600.06,Alimentacao
+Academia,1749.02,Saude
+Idiomas,205.52,Educacao
 Academia,1430.22,Saude
 Combustivel,1745.03,Transporte
 Parque,1534.7,Lazer
@@ -1087,8 +1090,8 @@ Metro,791.34,Transporte
 pagamento diverso,1290.24,Outras
 PIX,508.69,Outras
 Pagamento Diverso,1284.27,Outras
-Hortifruti,1810.19,Alimentacao
-Lanche,961.5,Alimentacao
+Almoco,666.36,Alimentacao
+convenio,961.5,Servicos
 Fatura Cartao,1084.86,Servicos
 Hortifruti,969.31,Alimentacao
 Netflix,1268.22,Lazer
@@ -1172,13 +1175,14 @@ Agua,1220.22,Moradia
 Gas,1536.52,Moradia
 aluguel,1915.67,Moradia
 Tarifa Bancaria,1028.0,Servicos
-Acougue,861.0,Alimentacao
-ASSINATURA SOFTWARE,896.7,Servicos
-Estacionamento,1985.27,Transporte
-pix,1459.92,Outras
-Tarifa Bancaria,295.84,Servicos
-Faculdade,677.48,Educacao
-cartao de credito,358.04,Servicos
+Almoco,1709.07,Alimentacao
+Spotify,709.2,Lazer
+Pagamento Diverso,1485.64,Outras
+Seguro,1941.02,Servicos
+Fatura Cartao,1178.49,Servicos
+Gasolina,1736.38,Transporte
+Cinema,757.79,Lazer
+Hortifruti,358.04,Alimentacao
 transferencia,986.27,Outras
 Idiomas,1482.31,Educacao
 Aluguel,607.34,Moradia
@@ -1232,10 +1236,10 @@ Manutencao,1373.89,Transporte
 Boleto Avulso,120.92,Outras
 Faculdade,1356.21,Educacao
 livros,739.16,Educacao
-Acougue,1983.97,Alimentacao
-ASSINATURA SOFTWARE,631.08,Servicos
-Uber,347.86,Transporte
-Streaming,1140.42,Lazer
+Quentinha,203.73,Alimentacao
+Netflix!!!,476.9,Lazer
+material didatico,237.8,Educacao
+Farmacia,850.72,Saude
 ASSINATURA SOFTWARE!!!,1145.0,Servicos
 Cinema,1353.47,Lazer
 Parque,685.68,Lazer
@@ -1246,8 +1250,8 @@ Manutencao,955.78,Transporte
 Energia Eletrica,610.68,Moradia
 Faculdade,834.49,Educacao
 Material Didatico,1099.65,Educacao
-Lanche,433.78,Alimentacao
-PIX,1232.7,Outras
+Almoco,1157.92,Alimentacao
+Reforma,939.92,Moradia
 Convenio!!!,930.35,Servicos
 Condominio,1689.8,Moradia
 Assinatura Software,1271.52,Servicos
@@ -1266,10 +1270,11 @@ Faculdade,121.29,Educacao
 Cinema,1368.65,Lazer
 Idiomas,1434.19,Educacao
 Mensalidade Escolar,79.27,Educacao
-Ifood,1281.51,Alimentacao
-Cinema,890.38,Lazer
-Hortifruti,608.77,Alimentacao
-Energia Eletrica,1832.62,Moradia
+Marmita,513.44,Alimentacao
+Assinatura Software,1807.28,Servicos
+99,783.06,Transporte
+Assinatura Software,1515.77,Servicos
+Curso Online,883.3,Educacao
 Spotify,169.39,Lazer
 Boleto Avulso,672.12,Outras
 Cartao de Credito,1017.61,Servicos
@@ -1313,9 +1318,9 @@ OFICINA MECANICA,1322.48,Transporte
 PIX,1315.78,Outras
 PIX,1814.69,Outras
 Academia,573.08,Saude
-Restaurante,194.18,Alimentacao
-Curso Online,803.85,Educacao
-ifood,1507.59,Alimentacao
+marmita,803.73,Alimentacao
+Academia,187.48,Saude
+Condominio,1297.86,Moradia
 Consulta Medica,1474.42,Saude
 Aula Particular,201.26,Educacao
 TEATRO,544.27,Lazer
@@ -1351,9 +1356,9 @@ Aula Particular,266.9,Educacao
 Condominio,837.81,Moradia
 PIX,1998.53,Outras
 Hotel,1657.62,Lazer
-Restaurante,461.11,Alimentacao
+QUENTINHA,250.17,Alimentacao
 Agua,716.93,Moradia
-Lanche,1383.37,Alimentacao
+Quentinha,310.84,Alimentacao
 Combustivel,919.7,Transporte
 Uber,1718.19,Transporte
 99,1743.03,Transporte
@@ -1366,7 +1371,8 @@ TARIFA BANCARIA,1797.15,Servicos
 Streaming,1438.08,Lazer
 Uber,1547.02,Transporte
 Cartao de Credito,310.39,Servicos
-Lanche,1772.71,Alimentacao
+Almoco,1752.87,Alimentacao
+Faculdade,1111.68,Educacao
 Aula Particular,25.73,Educacao
 Material Didatico,813.84,Educacao
 Gas,889.87,Moradia
@@ -1434,16 +1440,16 @@ Ifood,230.78,Alimentacao
 Material Didatico,395.6,Educacao
 Consulta Medica,263.59,Saude
 Gas,1696.86,Moradia
-Lanche,1767.37,Alimentacao
-Hortifruti,113.21,Alimentacao
-Spotify,252.22,Lazer
-Boleto Avulso,1768.77,Outras
-Aluguel,903.23,Moradia
-HORTIFRUTI,60.49,Alimentacao
+Marmita,1364.55,Alimentacao
+Pagamento Diverso,1886.72,Outras
+Quitanda,1990.26,Alimentacao
+Mensalidade Escolar,729.33,Educacao
+Marmita,845.92,Alimentacao
+PIX,60.49,Outras
 Reforma!!!,337.32,Moradia
 Mensalidade Escolar!!!,1618.04,Educacao
 Hotel,1918.02,Lazer
-Acougue,155.09,Alimentacao
+Quitanda,1887.66,Alimentacao
 Pagamento Diverso,180.21,Outras
 Supermercado,1389.79,Alimentacao
 Farmacia,609.93,Saude
@@ -1529,7 +1535,7 @@ SUSHI,787.79,Alimentacao
 Combustivel,722.59,Transporte
 reforma,1396.52,Moradia
 Pedagio,1200.43,Transporte
-Hortifruti,755.54,Alimentacao
+Quentinha,506.9,Alimentacao
 CONDOMINIO,680.86,Moradia
 Reforma,1765.75,Moradia
 plano de saude,652.13,Saude
@@ -1567,11 +1573,11 @@ Spotify,1180.73,Lazer
 Cartao de Credito,1864.94,Servicos
 Academia,1544.83,Saude
 Teatro,742.68,Lazer
-Hortifruti,492.28,Alimentacao
-Acougue,1397.97,Alimentacao
-Hospital,303.26,Saude
-Gas,331.24,Moradia
-Uber,801.36,Transporte
+Almoco,501.12,Alimentacao
+Pagamento Diverso,1416.05,Outras
+Marmita,1214.82,Alimentacao
+Hospital,1328.58,Saude
+FARMACIA,774.85,Saude
 99,339.99,Transporte
 Assinatura Software,1071.07,Servicos
 Convenio,1754.04,Servicos
@@ -1594,7 +1600,7 @@ Combustivel,1453.19,Transporte
 Farmacia,566.14,Saude
 Energia Eletrica,1741.01,Moradia
 fatura cartao,1627.11,Servicos
-Acougue,1474.27,Alimentacao
+Almoco,657.8,Alimentacao
 Transferencia,1229.06,Outras
 Oficina Mecanica,1862.38,Transporte
 Pedagio,294.89,Transporte
@@ -1624,9 +1630,9 @@ Boleto Avulso,1825.63,Outras
 Farmacia,1359.02,Saude
 Spotify,573.25,Lazer
 Reforma,270.49,Moradia
-Feira,283.75,Alimentacao
-PIX,1610.67,Outras
-Reforma,1713.72,Moradia
+Quitanda,1312.72,Alimentacao
+Psicologo,298.2,Saude
+IPTU,28.17,Moradia
 Gasolina,1362.1,Transporte
 farmacia,114.42,Saude
 Spotify,813.95,Lazer
@@ -1671,7 +1677,7 @@ Cinema!!!,196.33,Lazer
 Restaurante,990.77,Alimentacao
 Hortifruti,281.49,Alimentacao
 Pagamento Diverso,1822.66,Outras
-Hortifruti,496.01,Alimentacao
+Marmita,696.67,Alimentacao
 Sushi,1861.07,Alimentacao
 condominio,1905.44,Moradia
 Seguro,235.33,Servicos
@@ -1704,7 +1710,7 @@ Livros,841.97,Educacao
 STREAMING,650.06,Lazer
 Faculdade,867.51,Educacao
 Faculdade,202.81,Educacao
-Lanche,727.53,Alimentacao
+Almoco,669.11,Alimentacao
 Teatro,559.13,Lazer
 Cartao de Credito,1487.75,Servicos
 Combustivel,1312.17,Transporte
@@ -1724,8 +1730,8 @@ Hospital,1583.34,Saude
 IPTU,1300.8,Moradia
 netflix,1446.94,Lazer
 Convenio,1255.65,Servicos
-Acougue,361.7,Alimentacao
-Lanche,1878.64,Alimentacao
+Quitanda,566.58,Alimentacao
+Mensalidade Escolar,1558.59,Educacao
 Pedagio,1256.2,Transporte
 IPTU,415.8,Moradia
 Tarifa Bancaria,873.47,Servicos
@@ -1736,9 +1742,9 @@ GASOLINA,1941.07,Transporte
 99!!!,774.14,Transporte
 Combustivel,97.04,Transporte
 IPTU,36.86,Moradia
-Restaurante,1706.91,Alimentacao
-estacionamento,1632.78,Transporte
-Livros,1091.62,Educacao
+quentinha,1417.84,Alimentacao
+Condominio,894.21,Moradia
+Hospital,121.19,Saude
 Aula Particular!!!,1093.84,Educacao
 99,12.41,Transporte
 Aluguel,713.09,Moradia
@@ -1761,8 +1767,8 @@ Netflix,1639.83,Lazer
 faculdade,1826.78,Educacao
 Condominio!!!,1924.48,Moradia
 Dentista,855.17,Saude
-Restaurante,1742.25,Alimentacao
-Padaria!!!,1142.67,Alimentacao
+marmita,1191.91,Alimentacao
+FARMACIA,34.83,Saude
 Tarifa Bancaria,288.82,Servicos
 Faculdade,1564.98,Educacao
 FEIRA,1212.31,Alimentacao
@@ -1877,8 +1883,8 @@ Parque,1395.95,Lazer
 Boleto Avulso,251.61,Outras
 CINEMA!!!,652.49,Lazer
 TARIFA BANCARIA,744.07,Servicos
-Supermercado,230.5,Alimentacao
-Mensalidade Escolar,1585.34,Educacao
+Marmita,1572.04,Alimentacao
+Combustivel!!!,1229.37,Transporte
 Assinatura Software,1171.07,Servicos
 Gasolina,1172.42,Transporte
 Fatura Cartao,1059.9,Servicos
@@ -1894,13 +1900,13 @@ Gasolina,229.3,Transporte
 PIZZARIA,910.76,Alimentacao
 Mensalidade Escolar!!!,309.73,Educacao
 Convenio,745.86,Servicos
-Hortifruti,595.07,Alimentacao
-Tarifa Bancaria,992.3,Servicos
-Cartao de Credito,1918.35,Servicos
-ALUGUEL,141.04,Moradia
-Onibus,1434.49,Transporte
-seguro,543.85,Servicos
-Condominio,583.11,Moradia
+Almoco,395.92,Alimentacao
+AGUA,1042.05,Moradia
+Combustivel,446.96,Transporte
+Supermercado,1068.94,Alimentacao
+Curso Online,815.07,Educacao
+Cartao de Credito,1386.45,Servicos
+TRANSFERENCIA,1414.65,Outras
 AULA PARTICULAR,1248.02,Educacao
 Idiomas,637.07,Educacao
 gasolina,35.34,Transporte
@@ -1969,8 +1975,9 @@ Streaming,1400.46,Lazer
 Tarifa Bancaria,407.47,Servicos
 Faculdade,410.37,Educacao
 Dentista,392.67,Saude
-Restaurante,1787.65,Alimentacao
-Spotify,688.02,Lazer
+Almoco!!!,289.72,Alimentacao
+Acougue,1730.34,Alimentacao
+Show,1459.28,Lazer
 Transferencia,952.73,Outras
 Netflix,284.37,Lazer
 Metro,151.03,Transporte
@@ -1991,11 +1998,4 @@ Fatura Cartao!!!,780.38,Servicos
 fatura cartao,240.01,Servicos
 Manutencao,395.35,Transporte
 Cartao de Credito!!!,832.0,Servicos
-Supermercado,123.2,Alimentacao
-Padaria,635.11,Alimentacao
-ENERGIA ELETRICA,1316.61,Moradia
-Onibus,1413.46,Transporte
-Viagem,740.2,Lazer
-Idiomas,542.4,Educacao
-Combustivel,1901.62,Transporte
-pix,1046.78,Outras
+quentinha,162.46,Alimentacao

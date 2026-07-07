@@ -15,6 +15,7 @@ CATEGORIAS = {
     "Alimentacao": [
         "Supermercado", "Restaurante", "Padaria", "Ifood", "Feira",
         "Acougue", "Hortifruti", "Pizzaria", "Lanche", "Sushi",
+        "Almoco", "Marmita", "Quentinha", "Quitanda",
     ],
     "Transporte": [
         "Combustivel", "Uber", "Gasolina", "Estacionamento", "Onibus",

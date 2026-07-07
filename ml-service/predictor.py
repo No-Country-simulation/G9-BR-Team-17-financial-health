@@ -1,9 +1,15 @@
 import joblib
 import logging
+import unicodedata
+import re
 from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 
 logger = logging.getLogger(__name__)
+
+
+def _normalizar(texto: str) -> str:
+    return unicodedata.normalize("NFKD", texto).encode("ASCII", "ignore").decode("ASCII")
 
 MODELO_TRANSACOES_PATH = Path("models/modelo_transacoes.pkl")
 MODELO_PERFIL_PATH = Path("models/modelo_perfil.pkl")
@@ -44,25 +50,33 @@ def classificar_transacoes(transacoes):
     CACHE_KEYWORDS = {
         "Alimentacao": ["supermercado", "restaurante", "padaria", "ifood", "feira",
                         "acougue", "hortifruti", "delivery", "comida", "almoco",
-                        "jantar", "cafe", "lanche", "pizzaria", "sorvete"],
+                        "jantar", "cafe", "lanche", "pizzaria", "sorvete",
+                        "marmita", "quentinha", "alimentacao", "mercearia",
+                        "quitanda", "sacolao"],
         "Transporte": ["combustivel", "uber", "gasolina", "estacionamento", "onibus",
                        "oficina", "pedagio", "metro", "taxi", "99", "mecanica",
-                       "passagem", "trem", "bicicleta", "manutencao veicular"],
+                       "passagem", "trem", "bicicleta", "manutencao veicular",
+                       "transporte", "locomocao", "combustivel", "gasolina"],
         "Saude": ["farmacia", "medico", "consulta", "plano de saude", "academia",
                   "hospital", "exame", "dentista", "psicologo", "remedio",
-                  "medicamento", "clinica", "fisioterapia", "vacina", "oftalmologista"],
+                  "medicamento", "clinica", "fisioterapia", "vacina", "oftalmologista",
+                  "saude", "bem estar"],
         "Moradia": ["aluguel", "condominio", "energia", "agua", "gas", "reforma",
                     "eletrica", "iptu", "ipva", "manutencao", "predial", "casa",
-                    "apartamento", "imovel", "escritorio"],
+                    "apartamento", "imovel", "escritorio", "moradia",
+                    "luz", "conta luz", "conta agua"],
         "Educacao": ["mensalidade", "curso", "escola", "faculdade", "livro",
                      "material didatico", "aula", "universidade", "matricula",
-                     "intercambio", "idiomas", "tecnico", "graduacao", "pos graduacao"],
+                     "intercambio", "idiomas", "tecnico", "graduacao", "pos graduacao",
+                     "educacao", "cursinho", "pre vestibular"],
         "Lazer": ["streaming", "cinema", "show", "teatro", "viagem", "hotel",
                   "resort", "parque", "jogo", "game", "netflix", "spotify",
-                  "youtube", "prime", "disney", "hbo", "festa", "bar"],
+                  "youtube", "prime", "disney", "hbo", "festa", "bar",
+                  "lazer", "diversao", "entretenimento"],
         "Servicos": ["cartao de credito", "tarifa", "assinatura", "seguro",
                      "convenio", "nubank", "inter", "itau", "bradesco", "santander",
-                     "banco", "fatura", "financeira", "emprestimo"],
+                     "banco", "fatura", "financeira", "emprestimo",
+                     "servico", "anuidade"],
     }
 
     CATEGORIA_PADRAO = "Outras"
@@ -70,7 +84,10 @@ def classificar_transacoes(transacoes):
     resultados = []
     for t in transacoes:
         desc = t.get("descricao", "").lower().strip()
-        desc_clean = "".join(c for c in desc if c.isalnum() or c.isspace()).strip()
+        desc_clean = _normalizar(desc)
+        desc_clean = "".join(c for c in desc_clean if c.isalnum() or c.isspace()).strip()
+
+        categoria = CATEGORIA_PADRAO
 
         if modelo_transacoes is not None and vectorizer is not None:
             desc_vec = vectorizer.transform([desc_clean])
@@ -78,19 +95,13 @@ def classificar_transacoes(transacoes):
             if isinstance(modelo_transacoes, LogisticRegression):
                 probs = modelo_transacoes.predict_proba(desc_vec)[0]
                 max_prob = max(probs)
-                categorias = modelo_transacoes.classes_
-                idx = list(categorias).index(cat_idx)
                 if max_prob >= 0.5:
                     categoria = str(cat_idx)
-                else:
-                    categoria = CATEGORIA_PADRAO
-            else:
-                categoria = str(cat_idx)
-        else:
-            categoria = CATEGORIA_PADRAO
+
+        if categoria == CATEGORIA_PADRAO:
             maior_pontuacao = 0
             for cat, keywords in CACHE_KEYWORDS.items():
-                pontuacao = sum(1 for kw in keywords if kw in desc)
+                pontuacao = sum(1 for kw in keywords if kw in desc_clean)
                 if pontuacao > maior_pontuacao:
                     maior_pontuacao = pontuacao
                     categoria = cat
@@ -135,10 +146,10 @@ def classificar_perfil(renda_mensal, nivel_endividamento, frequencia_poupanca,
             "nivel_endividamento": endividamento_norm * 100,
             "proporcao_comprometimento_renda": proporcao_essenciais + proporcao_nao_essenciais,
             "proporcao_gastos_nao_essenciais": proporcao_nao_essenciais,
-            "frequencia_poupanca_Nenhuma": 1 if freq_num == 0 else 0,
+            "frequencia_poupanca_Alta": 1 if freq_num == 3 else 0,
             "frequencia_poupanca_Baixa": 1 if freq_num == 1 else 0,
             "frequencia_poupanca_Media": 1 if freq_num == 2 else 0,
-            "frequencia_poupanca_Alta": 1 if freq_num == 3 else 0,
+            "frequencia_poupanca_Nenhuma": 1 if freq_num == 0 else 0,
         }])
 
         if hasattr(modelo_perfil, "predict_proba"):
