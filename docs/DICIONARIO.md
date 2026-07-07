@@ -23,7 +23,7 @@ Este documento é referência obrigatória para a equipe de Ciência de Dados (n
 | transacoes[].valor | número decimal | Maior que 0 | Sim | Valor monetário da transação individual |
 | perfil_financeiro | string (enum) | "Saudavel", "Em observacao", "Em risco" | Sim (saída) | Classificação consolidada da saúde financeira do usuário |
 | probabilidade | número decimal | 0 a 1 | Sim (saída) | Grau de confiança do modelo na classificação do perfil |
-| resumo_gastos | objeto (chave dinâmica) | Chaves conforme domínio de categorias | Sim (saída) | Agregação de valores de transações por categoria identificada. As chaves seguem a regra de derivação: nome da categoria em minúsculas, sem acentos e sem espaços (ex: "Alimentacao", "Em observacao" → "em_observacao") |
+| resumo_gastos | objeto (chave dinâmica) | Chaves conforme domínio de categorias | Sim (saída) | Agregação de valores de transações por categoria identificada. As chaves seguem a regra de derivação: nome da categoria em minúsculas, sem acentos, espaços substituídos por underline (ex: "Alimentação" → "alimentacao", "Serviços" → "servicos") |
 | recomendacoes | lista de string | Mínimo 1 item | Sim (saída) | Conjunto de orientações textuais vinculadas aos indicadores |
 | categoria (classificação isolada) | string (enum) | Conforme domínio de categorias | Sim (saída) | Categoria atribuída a uma transação individual |
 
