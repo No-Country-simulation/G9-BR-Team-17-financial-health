@@ -6,24 +6,24 @@
 
 ## 1. Visão Geral da Arquitetura
 
-O sistema é composto por três serviços independentes que rodam em containers Docker, orquestrados pelo docker compose:
+O sistema é composto por quatro serviços independentes que rodam em containers Docker, orquestrados pelo docker compose:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        docker compose                            │
-│                                                                 │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────────┐   │
-│  │   Frontend   │    │     API      │    │   ML Service     │   │
-│  │   (React)    │───▶│ Spring Boot  │───▶│   (FastAPI)      │   │
-│  │   :3000      │    │   :8080      │    │   :8000          │   │
-│  └──────────────┘    └──────┬───────┘    └──────────────────┘   │
-│                             │                                    │
-│                             ▼                                    │
-│                      ┌──────────────┐                           │
-│                      │  Armazenamento                           │
-│                      │  Local ou AJD │                           │
-│                      └──────────────┘                           │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                        docker compose                                │
+│                                                                     │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────────┐       │
+│  │   Frontend   │    │     API      │    │   ML Service     │       │
+│  │   (React)    │───▶│ Spring Boot  │───▶│   (FastAPI)      │       │
+│  │   :3000      │    │   :8080      │    │   :8000          │       │
+│  └──────────────┘    └──────┬───────┘    └──────────────────┘       │
+│                             │                                        │
+│                             ▼                                        │
+│                      ┌──────────────┐                               │
+│                      │  PostgreSQL  │                               │
+│                      │   :5432      │                               │
+│                      └──────────────┘                               │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 1.1 Fluxo de uma Requisição (Análise Financeira)
@@ -34,7 +34,7 @@ sequenceDiagram
     participant F as Frontend (React)
     participant B as API (Spring Boot)
     participant M as ML Service (FastAPI)
-    participant S as Storage
+    participant D as PostgreSQL
 
     U->>F: Preenche formulario
     F->>F: Valida campos no cliente
@@ -46,7 +46,7 @@ sequenceDiagram
     M-->>B: JSON com classificacao + probabilidade
     B->>B: Identifica padroes de consumo
     B->>B: Gera recomendacoes
-    B->>S: Salva resultado da analise
+    B->>D: Salva resultado da analise
     B-->>F: JSON com perfil + gastos + padroes + recomendacoes
     F->>F: Renderiza resultado
     F-->>U: Exibe tela com dados financeiros
@@ -79,6 +79,7 @@ sequenceDiagram
 - Zero instalação de dependências (Java, Python, Node) nos notebooks da equipe
 - Facilita CI/CD futuro
 - Cada serviço pode ser desenvolvido e testado isoladamente
+- O mesmo `docker-compose.yml` roda em desenvolvimento e em produção na OCI
 
 ### 2.4 Por que WireMock e não o ml-service real nos testes?
 
@@ -87,34 +88,33 @@ sequenceDiagram
 - Sem dependência do container Python nos testes do backend
 - O contrato real é verificado separadamente (teste de contrato opcional)
 
-### 2.5 Por que armazenamento em interface?
+### 2.5 Por que PostgreSQL?
 
-```java
-public interface Armazenamento {
-    void salvar(String id, String conteudoJson);
-    Optional<String> carregar(String id);
-    List<String> listarHistorico(int limite);
-}
-```
-
-- `ArmazenamentoLocal` → usa H2 em arquivo, roda no container `api` sem dependência externa
-- `ArmazenamentoAJD` → usa SODA para Java, conecta na Oracle Autonomous JSON Database via wallet
-- Trocado via variável de ambiente `ARMAZENAMENTO_TIPO`
-- Zero alteração no código de negócio ao migrar
-
-### 2.6 Por que Autonomous JSON Database e não Object Storage?
-
-O edital do hackathon sugere Object Storage como serviço OCI para "armazenamento de modelos ou dados". O projeto optou pelo Autonomous JSON Database (AJD) pelas seguintes razões:
-
-| Critério | AJD (escolhido) | Object Storage |
+| Critério | PostgreSQL (escolhido) | H2 + AJD (alternativa) |
 |---|---|---|
-| Estrutura | Documentos JSON nativos (SODA) | Blobs (arquivos) |
-| Consulta | Consultas por campo do JSON sem baixar o documento inteiro | Download completo do blob para ler qualquer campo |
-| Modelo de dados | Um documento por análise, estrutura definida (seção 4.3) | Um arquivo `.json` por análise |
-| Complexidade de implementação | Driver SODA para Java, integração direta com Spring Boot | SDK do OCI, upload/download manual |
-| Armazenamento de modelos `.pkl` | (não atende) | (não atende igualmente) |
+| Consistência dev/prod | Mesmo banco nos dois ambientes | H2 no dev, AJD Oracle na produção |
+| Driver/ORM | JPA + `spring-boot-starter-data-jpa` | JDBC H2 + SODA Oracle |
+| Número de implementações | 1 (repository JPA) | 2 (`ArmazenamentoLocal` + `ArmazenamentoAJD`) |
+| Migração dev → prod | Nenhuma alteração de código | Trocar variável de ambiente e interface |
+| Suporte Spring Boot | Excelente (nativo) | Médio (SODA precisa de driver Oracle) |
+| Suporte Python | psycopg2, SQLAlchemy | Não se aplica (apenas Java) |
+| Imagem Docker | `postgres:16-alpine` (oficial) | H2 em arquivo (sem container) |
+| Facilidade para equipe Junior | JPA + banco relacional padrão | Interface + Oracle específico + wallet |
 
-**Os modelos treinados (.pkl) não são armazenados em serviço OCI nesta versão do MVP.** Eles ficam em volume Docker local (`ml-service/models/`) e são carregados na inicialização do ml-service, conforme RA004. O Object Storage não foi escolhido porque o AJD oferece maior alinhamento com a natureza JSON dos dados do projeto (cada análise é um documento JSON) e porque o armazenamento de `.pkl` em Object Storage exigiria um fluxo de download na inicialização que adicionaria complexidade sem benefício para o prazo do hackathon. Essa decisão está registrada no board de riscos para reavaliação em versões futuras.
+Com PostgreSQL, a API usa JPA diretamente com um único dialect. O ml-service também pode acessar o mesmo banco quando necessário, usando psycopg2. Em desenvolvimento roda em container Docker; em produção, o mesmo container roda na OCI Compute.
+
+### 2.6 Por que OCI Compute e não outros serviços OCI?
+
+O edital do hackathon exige a utilização de pelo menos um serviço OCI. O projeto adota o **OCI Compute** pelos seguintes motivos:
+
+| Critério | OCI Compute (escolhido) | AJD | OCI Functions |
+|---|---|---|---|
+| Dev = Prod | Mesmo `docker-compose.yml` em ambos | Requer interface + wallet | Requer Fn CLI + deploy separado |
+| Adaptação de código | Zero | Trocar implementação de armazenamento | Reescrever ml-service |
+| Complexidade para equipe Junior | Baixa (Docker + SSH) | Média (Oracle wallet, SODA) | Alta (Fn CLI, IAM, VCN, cold start) |
+| Tempo de resposta | Previsível | Previsível | Cold start compromete RNF-DES-001 |
+| Custo | VM ligada continuamente | Paga por armazenamento | Paga por execução |
+| Liberdade de SO/ferramentas | Total (VM Ubuntu) | Restrito a Oracle DB | Restrito ao runtime da função |
 
 ---
 
@@ -131,7 +131,7 @@ nidus/
 │       │   ├── dto/                  # Request/Response DTOs
 │       │   ├── service/              # Regras de negócio
 │       │   ├── validation/           # Validadores
-│       │   └── infrastructure/       # Armazenamento, config
+│       │   └── repository/           # Acesso a dados (JPA)
 │       └── test/
 ├── ml-service/                       # FastAPI (ML)
 │   ├── Dockerfile
@@ -151,64 +151,93 @@ nidus/
 ├── notebooks/                        # Notebooks de treinamento
 │   ├── eda.ipynb
 │   └── treinamento.ipynb
+├── init.sql                          # Script de inicialização do banco
 ├── docker-compose.yml
 └── README.md
 ```
 
 ---
 
-## 4. Armazenamento
+## 4. Banco de Dados
 
-### 4.1 Local (modo dev, `ARMAZENAMENTO_TIPO=local`)
+### 4.1 PostgreSQL (dev e produção)
 
-- Banco H2 em arquivo (`./data/nidus.db`), montado como volume Docker no serviço `api`
-- Cada análise salva como documento JSON em uma tabela simulada pelo H2
-- Nenhuma credencial externa necessária
+- Imagem oficial: `postgres:16-alpine`
+- Porta padrão: 5432
+- Dados persistentes via volume Docker (`postgres_data:/var/lib/postgresql/data`)
+- Inicialização automática via `init.sql` montado em `/docker-entrypoint-initdb.d/`
+- Sem diferença entre desenvolvimento e produção — mesmo banco, mesmo driver, mesma configuração
 
-### 4.2 Oracle Autonomous JSON Database (modo produção, `ARMAZENAMENTO_TIPO=autonomous_json`)
+### 4.2 Configuração da API (Spring Boot)
 
-- Serviço OCI utilizado: Autonomous JSON Database (AJD)
-- API de acesso: SODA para Java (driver `com.oracle.database.soda`)
-- Estrutura de dados: coleção SODA `analises`, um documento JSON por análise
-- Autenticação: wallet (arquivo de configuração de conexão), nunca versionado no repositório
-- Ativado por: `ARMAZENAMENTO_TIPO=autonomous_json`
-- Deve ser implementado e compilado no código desde o MVP, mesmo que usado apenas na apresentação
+```properties
+spring.datasource.url=jdbc:postgresql://db:5432/nidus
+spring.datasource.username=${DB_USER:nidus}
+spring.datasource.password=${DB_PASSWORD:nidus}
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+```
 
-### 4.3 Estrutura do Documento na Coleção SODA
+### 4.3 Estrutura das Tabelas
 
-Cada análise salva como um documento JSON na coleção `analises`:
+```mermaid
+erDiagram
+    ANALISE {
+        uuid id PK
+        timestamp criado_em
+        jsonb requisicao
+        jsonb resposta
+        varchar perfil_financeiro
+        decimal probabilidade
+    }
 
-| Campo do documento | Descrição |
+    TRANSACAO_CLASSIFICADA {
+        uuid id PK
+        uuid analise_id FK
+        varchar descricao
+        decimal valor
+        varchar categoria
+    }
+```
+
+### 4.4 Script de Inicialização (`init.sql`)
+
+```sql
+CREATE TABLE IF NOT EXISTS analise (
+    id UUID PRIMARY KEY,
+    criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    requisicao JSONB NOT NULL,
+    resposta JSONB NOT NULL,
+    perfil_financeiro VARCHAR(20) NOT NULL,
+    probabilidade DECIMAL(4,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS transacao_classificada (
+    id UUID PRIMARY KEY,
+    analise_id UUID NOT NULL REFERENCES analise(id),
+    descricao VARCHAR(120) NOT NULL,
+    valor DECIMAL(12,2) NOT NULL,
+    categoria VARCHAR(20) NOT NULL
+);
+
+CREATE INDEX idx_analise_criado_em ON analise(criado_em DESC);
+```
+
+---
+
+## 5. Estratégia de Deploy na OCI
+
+| Componente | Desenvolvimento (local) | Produção (OCI Compute) |
 |---|---|---|
-| id | Identificador único da análise (UUID v4) |
-| criado_em | Timestamp ISO 8601 da análise |
-| requisicao | Corpo original enviado pelo cliente |
-| resposta | Corpo completo retornado ao cliente |
+| Frontend | Container Docker (`npm run dev`) | Container Docker (Nginx servindo build) |
+| API | Container Docker (Spring Boot) | Container Docker (mesma imagem) |
+| ML Service | Container Docker (FastAPI) | Container Docker (mesma imagem) |
+| PostgreSQL | Container Docker (`postgres:16-alpine`) | Container Docker (volume persistente) |
+| Orquestração | `docker compose up` | `docker compose up` na VM |
+| Autenticação | Nenhuma (rede local) | Nenhuma no MVP (adição futura) |
+| HTTPS | Nenhum | Load balancer OCI (futuro) |
 
----
-
-### 4.4 Regra de derivação das chaves do resumo_gastos
-
-As chaves do objeto `resumo_gastos` são derivadas do nome oficial da categoria (conforme seção 3 do DICIONARIO.md) aplicando:
-
-1. Conversão para minúsculas
-2. Remoção de acentos
-3. Substituição de espaços por underline (caso existam)
-
-Exemplo: `"Alimentacao"` → `"alimentacao"`, `"Em observacao"` → `"em_observacao"`.
-
----
-
-## 5. Estratégia de Migração para OCI
-
-| Componente | Local (MVP) | OCI (Produção) | Mudança |
-|---|---|---|---|
-| API | Container Docker | OCI Compute (mesma imagem) | Apenas deploy |
-| ML Service | Container Docker | OCI Compute (mesma imagem) | Apenas deploy |
-| Frontend | Container Docker | OCI Compute + Nginx | Apenas deploy |
-| Armazenamento | H2 em arquivo (`./data/nidus.db`) | Oracle Autonomous JSON Database (AJD) via SODA | Trocar implementação via interface |
-
-Nenhuma linha de código de negócio precisa ser alterada. A migração é puramente operacional.
+O mesmo arquivo `docker-compose.yml` é usado em ambos os ambientes. A única diferença operacional é o endereço da VM na OCI.
 
 ### 5.1 Tratamento de timeout do ml-service
 
@@ -222,14 +251,17 @@ A API (Spring Boot) deve configurar timeout de conexão e leitura ao chamar o ml
 
 - A API não exige autenticação
 - Recomendado rodar apenas em rede local
-- Documentado como pendente para produção
+- Dados financeiros trafegam em texto claro na rede interna dos containers
+- A proteção em trânsito (HTTPS) e o controle de acesso serão adicionados após o MVP
 
-### 6.2 Produção (OCI)
+### 6.2 Pós-MVP
 
-- RNF-SEG-003: controle de acesso via API Key ou JWT
-- RNF-SEG-001: HTTPS via load balancer da OCI
-- RNF-SEG-002: criptografia em repouso nativa do Oracle Autonomous JSON Database
-- A ser definido em versão futura
+| Requisito | Solução prevista |
+|---|---|
+| HTTPS | Load balancer OCI com certificado TLS |
+| Autenticação | API Key ou JWT |
+| Criptografia em repouso | Criptografia nativa do volume do container ou OCI Block Volume |
+| Auditoria | Logs estruturados com correlation ID |
 
 ---
 
@@ -238,7 +270,9 @@ A API (Spring Boot) deve configurar timeout de conexão e leitura ao chamar o ml
 | Variável | Serviço | Descrição | Default (MVP) |
 |---|---|---|---|
 | `ML_SERVICE_URL` | api | URL do ml-service | `http://ml-service:8000` |
-| `ARMAZENAMENTO_TIPO` | api | local ou autonomous_json | `local` |
+| `DB_URL` | api | URL de conexão com PostgreSQL | `jdbc:postgresql://db:5432/nidus` |
+| `DB_USER` | api | Usuário do banco | `nidus` |
+| `DB_PASSWORD` | api | Senha do banco | `nidus` |
 | `VITE_API_URL` | frontend | URL da API | `http://localhost:8080` |
 
 ---
@@ -247,6 +281,23 @@ A API (Spring Boot) deve configurar timeout de conexão e leitura ao chamar o ml
 
 ```yaml
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nidus
+      POSTGRES_USER: nidus
+      POSTGRES_PASSWORD: nidus
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nidus"]
+      interval: 5s
+      retries: 10
+      start_period: 10s
+
   ml-service:
     build: ./ml-service
     ports:
@@ -263,12 +314,14 @@ services:
     build: ./backend
     ports:
       - "8080:8080"
-    volumes:
-      - ./data/nidus.db:/app/data/nidus.db
     environment:
       - ML_SERVICE_URL=http://ml-service:8000
-      - ARMAZENAMENTO_TIPO=local
+      - DB_URL=jdbc:postgresql://db:5432/nidus
+      - DB_USER=nidus
+      - DB_PASSWORD=nidus
     depends_on:
+      db:
+        condition: service_healthy
       ml-service:
         condition: service_healthy
 
@@ -280,4 +333,7 @@ services:
       - api
     environment:
       - VITE_API_URL=http://localhost:8080
+
+volumes:
+  postgres_data:
 ```
