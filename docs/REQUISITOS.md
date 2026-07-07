@@ -52,9 +52,10 @@ flowchart TD
     B -- Dados validos --> D[Classificacao de transacoes por categoria]
     D --> E[Identificacao de padroes de consumo]
     E --> F[Calculo de indicadores financeiros]
-    F --> G[Classificacao do perfil financeiro]
-    G --> H[Geracao de recomendacoes vinculadas aos indicadores]
-    H --> I[Retorno estruturado dos resultados]
+    F --> G[Identificacao de padroes de consumo]
+    G --> H[Classificacao do perfil financeiro]
+    H --> I[Geracao de recomendacoes vinculadas aos indicadores e padroes]
+    I --> J[Retorno estruturado dos resultados]
 ```
 
 ---
@@ -66,7 +67,7 @@ flowchart TD
 | RF001 | Recepção de dados financeiros | O sistema deve receber dados de entrada contendo renda mensal, nível de endividamento, frequência de poupança e lista de transações (descrição e valor). | Alta |
 | RF002 | Validação de dados de entrada | O sistema deve validar formato, tipo e consistência dos dados recebidos antes de iniciar qualquer processamento analítico. | Alta |
 | RF003 | Classificação automática de transações | O sistema deve classificar cada transação recebida em uma categoria financeira predefinida (ex: Alimentação, Transporte, Saúde, Moradia, Educação, Lazer, Serviços, Outras). | Alta |
-| RF004 | Identificação de padrões de consumo | O sistema deve identificar padrões de consumo com base na distribuição e concentração de gastos nas transações fornecidas em uma única requisição (ex: percentual gasto por categoria, presença de categorias não essenciais acima de um limiar). A identificação de padrões ao longo do tempo depende da implementação de RF014. | Alta |
+| RF004 | Identificação de padrões de consumo | O sistema deve identificar, dentro de uma única requisição, os seguintes padrões de consumo: concentração de gastos por categoria acima de limiar definido (30% do total gasto), proporção de comprometimento de renda entre categorias essenciais (Moradia, Saúde, Transporte, Educação) e não essenciais (Lazer, Serviços), ocorrência de transações recorrentes (mesma descrição normalizada) e transações de valor atípico em relação à média das demais transações da requisição. Cada padrão identificado deve ser retornado de forma explícita na resposta da análise financeira no campo `padroes_identificados`. A identificação de padrões ao longo do tempo depende da implementação de RF014. | Alta |
 | RF005 | Cálculo de indicadores financeiros agregados | O sistema deve gerar indicadores consolidados, como resumo de gastos por categoria e proporção de comprometimento de renda. | Alta |
 | RF006 | Classificação do perfil financeiro | O sistema deve classificar o perfil financeiro do usuário em uma das categorias definidas (ex: Saudável, Em observação, Em risco), com base na combinação de renda, endividamento, poupança e padrão de gastos. | Alta |
 | RF007 | Geração de nível de confiança da classificação | O sistema deve retornar um valor de probabilidade ou confiança associado à classificação do perfil financeiro gerado. | Média |
