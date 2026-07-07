@@ -180,7 +180,7 @@ class TestClassificador:
     def test_probabilidade_no_range(self, modelo_perfil):
         perfil, prob = classificar_perfil(
             renda=8000, endividamento=5, poupanca="Alta",
-            transacoes=[], modelo_perfil
+            transacoes=[], modelo_perfil=modelo_perfil
         )
         assert 0 <= prob <= 1
         assert perfil in ["Saudavel", "Em observacao", "Em risco"]

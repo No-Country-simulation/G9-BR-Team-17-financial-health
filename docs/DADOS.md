@@ -82,7 +82,7 @@ O rótulo é atribuído seguindo, de forma probabilística e não determinístic
 | frequencia_poupanca | Categórico codificado | Nenhuma, Baixa, Media, Alta, conforme domínio do DICIONARIO.md |
 | proporcao_comprometimento_renda | Numérico derivado | Soma das transações dividida pela renda mensal |
 | proporcao_gastos_nao_essenciais | Numérico derivado | Soma de Lazer e Serviços dividida pela renda mensal, alimenta diretamente os gatilhos REC004 e REC005 |
-| proporcao_gastos_essenciais | Numérico derivado | Soma de Moradia e Saúde dividida pela renda mensal |
+| proporcao_gastos_essenciais | Numérico derivado | Soma de Alimentação, Moradia, Saúde, Transporte e Educação dividida pela renda mensal |
 
 ```mermaid
 flowchart LR

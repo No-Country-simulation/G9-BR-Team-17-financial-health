@@ -211,14 +211,14 @@ Saída:
   },
   "padroes_identificados": [
     "Categoria de maior gasto: Alimentacao",
-    "Comprometimento de renda com gastos essenciais: 16%"
+    "Comprometimento de renda com gastos essenciais: 16%",
+    "Gastos nao essenciais comprometem 1% da renda"
   ],
   "recomendacoes": [
-    "Monitorar gastos recorrentes em Alimentacao",
-    "Aumentar reserva financeira mensal"
+    "Aumentar reserva financeira mensal",
+    "Monitorar gastos recorrentes em Alimentacao"
   ]
 }
-```
 
 **Exemplo 2: Perfil "Saudavel"**
 

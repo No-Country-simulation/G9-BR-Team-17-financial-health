@@ -182,7 +182,7 @@ Cada análise salva como um documento JSON na coleção `analises`:
 |---|---|---|
 | id | Identificador único da análise (UUID v4) |
 | criado_em | Timestamp ISO 8601 da análise |
-| requisição | Corpo original enviado pelo cliente |
+| requisicao | Corpo original enviado pelo cliente |
 | resposta | Corpo completo retornado ao cliente |
 
 ---

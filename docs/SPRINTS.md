@@ -63,7 +63,8 @@ gantt
     EDA e dataset inicial              :d1, 2026-07-06, 7d
     Modelo v1 categorias e perfil      :d2, after d1, 7d
     Treino final e metricas            :d3, after d2, 7d
-    Notebook final e ajustes finos      :d4, after d3, 7d
+    Ajustes finos e explicabilidade    :d4, after d3, 7d
+    Notebook final documentado         :d5, after d4, 7d
     section Backend
     Setup e validacao de entrada        :b1, 2026-07-06, 7d
     Endpoint classificacao com mock ML  :b2, after b1, 7d

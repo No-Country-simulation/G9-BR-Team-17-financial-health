@@ -87,7 +87,7 @@ Conforme RN003 do SRS, nenhum fator isolado determina o perfil. A tabela abaixo 
 | nivel_endividamento | Valores baixos | Valores elevados |
 | frequencia_poupanca | "Alta" ou "Media" | "Nenhuma" ou "Baixa" |
 | Concentração de gastos em categorias não essenciais (Lazer, Serviços) | Baixa proporção sobre a renda | Alta proporção sobre a renda |
-| Regularidade dos gastos essenciais (Moradia, Saúde) frente à renda | Proporção equilibrada | Proporção desproporcional à renda declarada |
+| Regularidade dos gastos essenciais (Alimentação, Moradia, Saúde, Transporte, Educação) frente à renda | Proporção equilibrada | Proporção desproporcional à renda declarada |
 
 ### 4.3 Transições Conceituais entre Perfis
 
@@ -165,7 +165,7 @@ Toda recomendação gerada deve estar vinculada a um indicador identificado na a
 |---|---|---|
 | REC001 | Perfil "Em risco" | Priorizar quitação de dívidas para reduzir o comprometimento da renda |
 | REC002 | Perfil "Em risco" e frequencia_poupanca = "Nenhuma" | Estabelecer meta mínima de poupança mensal, mesmo que o valor seja pequeno |
-| REC003 | Perfil "Em observacao" e frequencia_poupanca = "Baixa" ou "Media" | Aumentar a frequência de poupança para criar reserva financeira |
+| REC003 | Perfil "Em observacao" e frequencia_poupanca = "Baixa" ou "Media" | Aumentar reserva financeira mensal |
 | REC004 | Concentração de gastos em Lazer > 30% da renda | Reduzir gastos com lazer e entretenimento |
 | REC005 | Concentração de gastos em Servicos > 25% da renda | Revisar assinaturas e serviços contratados |
 | REC006 | nivel_endividamento > 40 | Reduzir o nível de endividamento antes de assumir novos compromissos |

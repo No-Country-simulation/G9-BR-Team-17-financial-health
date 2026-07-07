@@ -101,11 +101,13 @@ API REST contendo:
 * Documentação dos endpoints. 
 
 ### OCI 
-Utilização de pelo menos um dos seguintes serviços: 
-* Autonomous JSON Database (AJD) para armazenamento de análises; 
+O edital do hackathon sugere os seguintes serviços OCI (a equipe deve utilizar pelo menos um): 
+* Object Storage para armazenamento de modelos ou dados; 
 * OCI Compute para hospedagem da aplicação; 
 * OCI Functions para processamento específico; 
 * Banco de dados opcional para persistência de informações. 
+
+O projeto adota o **Autonomous JSON Database (AJD)** no lugar do Object Storage, conforme justificativa detalhada na seção 2.6 do documento de Arquitetura.
  
 ---
 
@@ -179,11 +181,12 @@ Exemplos:
   }, 
   "padroes_identificados": [
     "Categoria de maior gasto: Alimentacao",
-    "Comprometimento de renda com gastos essenciais: 16%"
+    "Comprometimento de renda com gastos essenciais: 16%",
+    "Gastos nao essenciais comprometem 1% da renda"
   ],
   "recomendacoes": [
-    "Monitorar gastos recorrentes em Alimentacao",
-    "Aumentar reserva financeira mensal"
+    "Aumentar reserva financeira mensal",
+    "Monitorar gastos recorrentes em Alimentacao"
   ] 
 } 
 ```
