@@ -15,14 +15,42 @@ docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 ### 1.1 Pirâmide de Testes
 
+```mermaid
+graph TD
+    subgraph Piramide_de_Testes
+        T3[Testes E2E] --> T2[Testes de Integracao]
+        T2 --> T1[Testes Unitarios]
+    end
+
+    T3 --> D3["Manual (exploratório) + futuro Cypress"]
+    T2 --> D2["Spring Boot + WireMock / FastAPI TestClient / MSW"]
+    T1 --> D1["Services, validadores, componentes isolados"]
 ```
-         ┌──────────┐
-         │   E2E    │  ← Manual (exploratório) + futuro Cypress
-        ┌┴──────────┴┐
-        │ Integração │  ← Spring Boot + WireMock / FastAPI TestClient
-       ┌┴────────────┴┐
-       │  Unitários   │  ← Services, validadores, componentes isolados
-       └──────────────┘
+
+### 1.2 Fluxo de Execução dos Testes
+
+```mermaid
+sequenceDiagram
+    participant D as Desenvolvedor
+    participant DC as docker-compose.test.yml
+    participant B as Backend (JUnit + WireMock)
+    participant M as ML Service (pytest)
+    participant F as Frontend (Vitest + MSW)
+
+    D->>DC: docker compose -f docker-compose.test.yml up
+    DC->>B: Sobe container api + wiremock
+    DC->>M: Sobe container ml-service
+    DC->>F: Sobe container frontend
+    B->>B: Executa testes unitarios (JUnit 5 + Mockito)
+    B->>B: Executa testes de integracao (WireMock)
+    B-->>DC: Resultado backend
+    M->>M: Executa testes unitarios (pytest)
+    M->>M: Executa testes de integracao (TestClient)
+    M-->>DC: Resultado ml-service
+    F->>F: Executa testes unitarios (Vitest + RTL)
+    F->>F: Executa testes de integracao (MSW)
+    F-->>DC: Resultado frontend
+    DC-->>D: Relatorio consolidado
 ```
 
 ---
@@ -66,8 +94,8 @@ class AnalisadorPerfilFinanceiroTest {
 | `AnaliseValidator` | Endividamento = 100 (comprometimento total) | 100 | Valido (caso de fronteira, secao 8 DICIONARIO) |
 | `AnaliseValidator` | transacoes[].valor = 0 | 0 | Erro VALOR_TRANSACAO_INVALIDO |
 | `AnaliseValidator` | frequencia_poupanca com erro de digitacao | "Mediaa" | Erro ENUM_INVALIDO |
-| `GeradorRecomendacoes` | Descricao "Farmacia e Conveniencia" | - | Priorizar Saude (regra de desambiguacao 3.3) |
-| `GeradorRecomendacoes` | Transacoes com descricao duplicada | Lista ["Supermercado", "Supermercado"] | Cada uma classificada independentemente |
+| `IdentificadorPadroesConsumo` | Descricao "Farmacia e Conveniencia" | - | Priorizar Saude (regra de desambiguacao 3.3) |
+| `AnaliseValidator` | Transacoes com descricao duplicada | Lista ["Supermercado", "Supermercado"] | Cada uma validada e classificada independentemente |
 | `IdentificadorPadroesConsumo` | Concentracao de categoria | Lazer = 40% do total gasto | PC001 presente |
 | `IdentificadorPadroesConsumo` | Sem concentracao | Gastos distribuidas igualmente entre 4 categorias | Nenhum PC001 |
 | `IdentificadorPadroesConsumo` | Gasto recorrente | Duas transacoes "Streaming" e "STREAMING " (normalizacao) | PC004 presente (uma vez) |
