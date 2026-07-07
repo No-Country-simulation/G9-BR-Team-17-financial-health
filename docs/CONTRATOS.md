@@ -19,7 +19,7 @@ Todas as requisições e respostas utilizam o formato JSON, com codificação UT
 
 ### 2.2 Convenção de Nomenclatura de Campos
 
-Os campos seguem `snake_case`, em português, conforme já estabelecido no exemplo de referência do projeto.
+Os campos seguem `camelCase`, em português, conforme padronizado entre frontend e backend.
 
 ### 2.3 Códigos de Status HTTP Utilizados
 
@@ -39,8 +39,8 @@ Toda resposta de erro (400, 422 ou 500) segue a mesma estrutura, independente do
 {
   "erro": {
     "codigo": "CAMPO_INVALIDO",
-    "mensagem": "O campo 'renda_mensal' deve ser um numero positivo.",
-    "campo": "renda_mensal",
+    "mensagem": "O campo 'rendaMensal' deve ser um numero positivo.",
+    "campo": "rendaMensal",
     "timestamp": "2026-07-06T14:32:10Z"
   }
 }
@@ -91,9 +91,9 @@ sequenceDiagram
 
 ```json
 {
-  "renda_mensal": 4500,
-  "nivel_endividamento": 25,
-  "frequencia_poupanca": "Media",
+  "rendaMensal": 4500,
+  "nivelEndividamento": 25,
+  "frequenciaPoupanca": "Media",
   "transacoes": [
     {
       "descricao": "Supermercado",
@@ -105,9 +105,9 @@ sequenceDiagram
 
 | Campo | Tipo | Obrigatório | Restrições |
 |---|---|---|---|
-| renda_mensal | número decimal | Sim | Deve ser maior que 0 |
-| nivel_endividamento | número decimal | Sim | Deve estar entre 0 e 100 (representa percentual da renda comprometida) |
-| frequencia_poupanca | string (enum) | Sim | Valores aceitos: "Nenhuma", "Baixa", "Media", "Alta" |
+| rendaMensal | número decimal | Sim | Deve ser maior que 0 |
+| nivelEndividamento | número decimal | Sim | Deve estar entre 0 e 100 (representa percentual da renda comprometida) |
+| frequenciaPoupanca | string (enum) | Sim | Valores aceitos: "Nenhuma", "Baixa", "Media", "Alta" |
 | transacoes | lista de objetos | Sim | Deve conter no mínimo 1 transação |
 | transacoes[].descricao | string | Sim | Não pode ser vazia; máximo de 120 caracteres |
 | transacoes[].valor | número decimal | Sim | Deve ser maior que 0 |
@@ -116,14 +116,14 @@ sequenceDiagram
 
 ```json
 {
-  "perfil_financeiro": "Em observacao",
+  "perfilFinanceiro": "Em observacao",
   "probabilidade": 0.82,
-  "resumo_gastos": {
+  "resumoGastos": {
     "alimentacao": 420,
     "transporte": 300,
     "lazer": 40
   },
-  "padroes_identificados": [
+  "padroesIdentificados": [
     "Categoria de maior gasto: Alimentacao",
     "Comprometimento de renda com gastos essenciais: 16%"
   ],
@@ -136,10 +136,10 @@ sequenceDiagram
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| perfil_financeiro | string (enum) | Um dos valores: "Saudavel", "Em observacao", "Em risco" |
+| perfilFinanceiro | string (enum) | Um dos valores: "Saudavel", "Em observacao", "Em risco" |
 | probabilidade | número decimal (0 a 1) | Nível de confiança da classificação do perfil |
-| resumo_gastos | objeto (chave dinâmica) | Mapa de categoria de despesa para valor total agregado. Somente categorias com transações presentes são exibidas (conforme RN de omissão de categorias vazias) |
-| padroes_identificados | lista de string | Lista de padrões de consumo identificados na análise (ver domínio no DICIONARIO.md). Cada string segue formato descritivo definido na seção 10. Pode ser vazia se nenhum padrão for detectado. |
+| resumoGastos | objeto (chave dinâmica) | Mapa de categoria de despesa para valor total agregado. Somente categorias com transações presentes são exibidas (conforme RN de omissão de categorias vazias) |
+| padroesIdentificados | lista de string | Lista de padrões de consumo identificados na análise (ver domínio no DICIONARIO.md). Cada string segue formato descritivo definido na seção 10. Pode ser vazia se nenhum padrão for detectado. |
 | recomendacoes | lista de string | Uma ou mais recomendações objetivas, vinculadas aos indicadores identificados |
 
 ### 3.4 Fluxo de Decisão Interna (visão conceitual)
@@ -188,9 +188,9 @@ flowchart TD
 Entrada:
 ```json
 {
-  "renda_mensal": 4500,
-  "nivel_endividamento": 25,
-  "frequencia_poupanca": "Media",
+  "rendaMensal": 4500,
+  "nivelEndividamento": 25,
+  "frequenciaPoupanca": "Media",
   "transacoes": [
     { "descricao": "Supermercado", "valor": 420 },
     { "descricao": "Combustivel", "valor": 300 },
@@ -202,14 +202,14 @@ Entrada:
 Saída:
 ```json
 {
-  "perfil_financeiro": "Em observacao",
+  "perfilFinanceiro": "Em observacao",
   "probabilidade": 0.82,
-  "resumo_gastos": {
+  "resumoGastos": {
     "alimentacao": 420,
     "transporte": 300,
     "lazer": 40
   },
-  "padroes_identificados": [
+  "padroesIdentificados": [
     "Categoria de maior gasto: Alimentacao",
     "Comprometimento de renda com gastos essenciais: 16%",
     "Gastos nao essenciais comprometem 1% da renda"
@@ -226,9 +226,9 @@ Saída:
 Entrada:
 ```json
 {
-  "renda_mensal": 8000,
-  "nivel_endividamento": 5,
-  "frequencia_poupanca": "Alta",
+  "rendaMensal": 8000,
+  "nivelEndividamento": 5,
+  "frequenciaPoupanca": "Alta",
   "transacoes": [
     { "descricao": "Aluguel", "valor": 1500 },
     { "descricao": "Farmacia", "valor": 120 },
@@ -240,14 +240,14 @@ Entrada:
 Saida:
 ```json
 {
-  "perfil_financeiro": "Saudavel",
+  "perfilFinanceiro": "Saudavel",
   "probabilidade": 0.91,
-  "resumo_gastos": {
+  "resumoGastos": {
     "moradia": 1500,
     "saude": 120,
     "educacao": 200
   },
-  "padroes_identificados": [
+  "padroesIdentificados": [
     "Categoria de maior gasto: Moradia",
     "Comprometimento de renda com gastos essenciais: 22%",
     "Gastos nao essenciais comprometem 0% da renda"
@@ -264,9 +264,9 @@ Saida:
 Entrada:
 ```json
 {
-  "renda_mensal": 3000,
-  "nivel_endividamento": 68,
-  "frequencia_poupanca": "Nenhuma",
+  "rendaMensal": 3000,
+  "nivelEndividamento": 68,
+  "frequenciaPoupanca": "Nenhuma",
   "transacoes": [
     { "descricao": "Cartao de credito", "valor": 900 },
     { "descricao": "Uber", "valor": 250 },
@@ -278,14 +278,14 @@ Entrada:
 Saída:
 ```json
 {
-  "perfil_financeiro": "Em risco",
+  "perfilFinanceiro": "Em risco",
   "probabilidade": 0.88,
-  "resumo_gastos": {
+  "resumoGastos": {
     "servicos": 900,
     "transporte": 250,
     "alimentacao": 300
   },
-  "padroes_identificados": [
+  "padroesIdentificados": [
     "Concentracao em Servicos (62% do total gasto)",
     "Comprometimento de renda com gastos essenciais: 18%",
     "Gastos nao essenciais comprometem 30% da renda",
@@ -306,9 +306,9 @@ Saída:
 Entrada:
 ```json
 {
-  "renda_mensal": 4500,
-  "nivel_endividamento": 25,
-  "frequencia_poupanca": "Media",
+  "rendaMensal": 4500,
+  "nivelEndividamento": 25,
+  "frequenciaPoupanca": "Media",
   "transacoes": [
     { "descricao": "Supermercado", "valor": -420 }
   ]
@@ -360,7 +360,7 @@ Saída (422):
 
 ```json
 {
-  "transacoes_classificadas": [
+  "transacoesClassificadas": [
     {
       "descricao": "Supermercado",
       "valor": 420,
@@ -377,10 +377,10 @@ Saída (422):
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| transacoes_classificadas | lista de objetos | Uma entrada por transação recebida, na mesma ordem de envio |
-| transacoes_classificadas[].descricao | string | Repete a descrição original recebida |
-| transacoes_classificadas[].valor | número decimal | Repete o valor original recebido |
-| transacoes_classificadas[].categoria | string (enum) | Categoria atribuída: "Alimentacao", "Transporte", "Saude", "Moradia", "Educacao", "Lazer", "Servicos", "Outras" |
+| transacoesClassificadas | lista de objetos | Uma entrada por transação recebida, na mesma ordem de envio |
+| transacoesClassificadas[].descricao | string | Repete a descrição original recebida |
+| transacoesClassificadas[].valor | número decimal | Repete o valor original recebido |
+| transacoesClassificadas[].categoria | string (enum) | Categoria atribuída: "Alimentacao", "Transporte", "Saude", "Moradia", "Educacao", "Lazer", "Servicos", "Outras" |
 
 ### 4.4 Exemplos Reais de Utilização
 
@@ -399,7 +399,7 @@ Entrada:
 Saída:
 ```json
 {
-  "transacoes_classificadas": [
+  "transacoesClassificadas": [
     { "descricao": "Farmacia Popular", "valor": 85, "categoria": "Saude" },
     { "descricao": "Cinema", "valor": 60, "categoria": "Lazer" }
   ]
@@ -420,7 +420,7 @@ Entrada:
 Saída:
 ```json
 {
-  "transacoes_classificadas": [
+  "transacoesClassificadas": [
     { "descricao": "Pagamento diverso XY123", "valor": 50, "categoria": "Outras" }
   ]
 }
@@ -487,9 +487,9 @@ A validação de entrada é feita primariamente pela API (Spring Boot) com Bean 
 
 ```json
 {
-  "renda_mensal": 4500,
-  "nivel_endividamento": 25,
-  "frequencia_poupanca": "Media",
+  "rendaMensal": 4500,
+  "nivelEndividamento": 25,
+  "frequenciaPoupanca": "Media",
   "transacoes": [
     { "descricao": "Supermercado", "valor": 420 },
     { "descricao": "Combustivel", "valor": 300 }
@@ -499,9 +499,9 @@ A validação de entrada é feita primariamente pela API (Spring Boot) com Bean 
 
 | Campo | Tipo | Obrigatório | Restrições |
 |---|---|---|---|
-| renda_mensal | número decimal | Sim | Deve ser maior que 0 |
-| nivel_endividamento | número decimal | Sim | Deve estar entre 0 e 100 |
-| frequencia_poupanca | string (enum) | Sim | "Nenhuma", "Baixa", "Media", "Alta" |
+| rendaMensal | número decimal | Sim | Deve ser maior que 0 |
+| nivelEndividamento | número decimal | Sim | Deve estar entre 0 e 100 |
+| frequenciaPoupanca | string (enum) | Sim | "Nenhuma", "Baixa", "Media", "Alta" |
 | transacoes | lista de objetos | Sim | Mínimo 1 |
 | transacoes[].descricao | string | Sim | 1 a 120 caracteres |
 | transacoes[].valor | número decimal | Sim | Maior que 0 |
@@ -510,9 +510,9 @@ A validação de entrada é feita primariamente pela API (Spring Boot) com Bean 
 
 ```json
 {
-  "perfil_financeiro": "Em observacao",
+  "perfilFinanceiro": "Em observacao",
   "probabilidade": 0.82,
-  "transacoes_classificadas": [
+  "transacoesClassificadas": [
     { "descricao": "Supermercado", "valor": 420, "categoria": "Alimentacao" },
     { "descricao": "Combustivel", "valor": 300, "categoria": "Transporte" }
   ]
@@ -521,12 +521,12 @@ A validação de entrada é feita primariamente pela API (Spring Boot) com Bean 
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| perfil_financeiro | string (enum) | "Saudavel", "Em observacao", "Em risco" |
+| perfilFinanceiro | string (enum) | "Saudavel", "Em observacao", "Em risco" |
 | probabilidade | número decimal (0 a 1) | Confiança da classificação |
-| transacoes_classificadas | lista de objetos | Transações com categoria atribuída |
-| transacoes_classificadas[].descricao | string | Descrição original |
-| transacoes_classificadas[].valor | número decimal | Valor original |
-| transacoes_classificadas[].categoria | string | Categoria atribuída (ver domínio no Dicionário) |
+| transacoesClassificadas | lista de objetos | Transações com categoria atribuída |
+| transacoesClassificadas[].descricao | string | Descrição original |
+| transacoesClassificadas[].valor | número decimal | Valor original |
+| transacoesClassificadas[].categoria | string | Categoria atribuída (ver domínio no Dicionário) |
 
 ### 6.4 Contrato de Erro (422)
 
@@ -579,9 +579,9 @@ A validação de entrada é feita primariamente pela API (Spring Boot) com Bean 
   "analises": [
     {
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "criado_em": "2026-07-06T14:32:10Z",
-      "perfil_financeiro": "Em observacao",
-      "resumo_gastos": {
+      "criadoEm": "2026-07-06T14:32:10Z",
+      "perfilFinanceiro": "Em observacao",
+      "resumoGastos": {
         "alimentacao": 420,
         "transporte": 300,
         "lazer": 40
@@ -595,9 +595,9 @@ A validação de entrada é feita primariamente pela API (Spring Boot) com Bean 
 |---|---|---|
 | analises | lista de objetos | Lista de análises anteriores, ordenadas da mais recente para a mais antiga |
 | analises[].id | string (UUID v4) | Identificador único da análise |
-| analises[].criado_em | string (ISO 8601) | Momento em que a análise foi realizada |
-| analises[].perfil_financeiro | string (enum) | Perfil classificado na análise: "Saudavel", "Em observacao", "Em risco" |
-| analises[].resumo_gastos | objeto (chave dinâmica) | Mapa de categoria de despesa para valor total agregado |
+| analises[].criadoEm | string (ISO 8601) | Momento em que a análise foi realizada |
+| analises[].perfilFinanceiro | string (enum) | Perfil classificado na análise: "Saudavel", "Em observacao", "Em risco" |
+| analises[].resumoGastos | objeto (chave dinâmica) | Mapa de categoria de despesa para valor total agregado |
 
 ### 7.3 Exemplos Reais de Utilização
 
@@ -614,9 +614,9 @@ Resposta (200):
   "analises": [
     {
       "id": "c7d8e9f0-a1b2-3456-cdef-0987654321ab",
-      "criado_em": "2026-07-06T14:30:00Z",
-      "perfil_financeiro": "Em observacao",
-      "resumo_gastos": {
+      "criadoEm": "2026-07-06T14:30:00Z",
+      "perfilFinanceiro": "Em observacao",
+      "resumoGastos": {
         "alimentacao": 420,
         "transporte": 300,
         "lazer": 40
@@ -624,9 +624,9 @@ Resposta (200):
     },
     {
       "id": "b2c3d4e5-f6a7-8901-bcde-1234567890ab",
-      "criado_em": "2026-07-05T10:15:00Z",
-      "perfil_financeiro": "Em risco",
-      "resumo_gastos": {
+      "criadoEm": "2026-07-05T10:15:00Z",
+      "perfilFinanceiro": "Em risco",
+      "resumoGastos": {
         "servicos": 900,
         "transporte": 250,
         "alimentacao": 300

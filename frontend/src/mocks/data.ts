@@ -1,12 +1,12 @@
 export const analiseFinanceiraMock = {
-  perfil_financeiro: "Em observacao",
+  perfilFinanceiro: "Em observacao",
   probabilidade: 0.82,
-  resumo_gastos: {
+  resumoGastos: {
     alimentacao: 420,
     transporte: 300,
     lazer: 40,
   },
-  padroes_identificados: [
+  padroesIdentificados: [
     "Categoria de maior gasto: Alimentacao",
     "Comprometimento de renda com gastos essenciais: 16%",
   ],
@@ -17,7 +17,7 @@ export const analiseFinanceiraMock = {
 };
 
 export const classificacaoMock = {
-  transacoes_classificadas: [
+  transacoesClassificadas: [
     { descricao: "Supermercado", valor: 420, categoria: "Alimentacao" },
     { descricao: "Combustivel", valor: 300, categoria: "Transporte" },
   ],

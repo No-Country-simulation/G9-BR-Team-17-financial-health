@@ -18,18 +18,20 @@ def carregar_modelos():
     try:
         if MODELO_TRANSACOES_PATH.exists():
             data = joblib.load(MODELO_TRANSACOES_PATH)
-            if isinstance(data, dict):
-                modelo_transacoes = data.get("modelo")
-                vectorizer = data.get("vectorizer")
+            if isinstance(data, dict) and "modelo" in data:
+                modelo_transacoes = data["modelo"]
+                vectorizer = data["vectorizer"]
+                logger.info("Modelo de transacoes carregado (TfidfVectorizer + %s)",
+                            type(modelo_transacoes).__name__)
             else:
                 modelo_transacoes = data
-            logger.info("Modelo de transacoes carregado")
+                logger.info("Modelo de transacoes carregado (formato legado)")
         else:
             logger.warning("Modelo de transacoes nao encontrado: %s", MODELO_TRANSACOES_PATH)
 
         if MODELO_PERFIL_PATH.exists():
             modelo_perfil = joblib.load(MODELO_PERFIL_PATH)
-            logger.info("Modelo de perfil carregado")
+            logger.info("Modelo de perfil carregado (%s)", type(modelo_perfil).__name__)
         else:
             logger.warning("Modelo de perfil nao encontrado: %s", MODELO_PERFIL_PATH)
 
@@ -67,16 +69,30 @@ def classificar_transacoes(transacoes):
     resultados = []
     for t in transacoes:
         desc = t.get("descricao", "").lower().strip()
-        desc = "".join(c for c in desc if c.isalnum() or c.isspace()).strip()
+        desc_clean = "".join(c for c in desc if c.isalnum() or c.isspace()).strip()
 
-        categoria = CATEGORIA_PADRAO
-        maior_pontuacao = 0
-
-        for cat, keywords in CACHE_KEYWORDS.items():
-            pontuacao = sum(1 for kw in keywords if kw in desc)
-            if pontuacao > maior_pontuacao:
-                maior_pontuacao = pontuacao
-                categoria = cat
+        if modelo_transacoes is not None and vectorizer is not None:
+            desc_vec = vectorizer.transform([desc_clean])
+            cat_idx = modelo_transacoes.predict(desc_vec)[0]
+            if isinstance(modelo_transacoes, LogisticRegression):
+                probs = modelo_transacoes.predict_proba(desc_vec)[0]
+                max_prob = max(probs)
+                categorias = modelo_transacoes.classes_
+                idx = list(categorias).index(cat_idx)
+                if max_prob >= 0.5:
+                    categoria = str(cat_idx)
+                else:
+                    categoria = CATEGORIA_PADRAO
+            else:
+                categoria = str(cat_idx)
+        else:
+            categoria = CATEGORIA_PADRAO
+            maior_pontuacao = 0
+            for cat, keywords in CACHE_KEYWORDS.items():
+                pontuacao = sum(1 for kw in keywords if kw in desc)
+                if pontuacao > maior_pontuacao:
+                    maior_pontuacao = pontuacao
+                    categoria = cat
 
         resultados.append({
             "descricao": t.get("descricao", ""),
@@ -89,10 +105,10 @@ def classificar_transacoes(transacoes):
 
 def classificar_perfil(renda_mensal, nivel_endividamento, frequencia_poupanca,
                        transacoes_classificadas):
-    from math import exp
+    poupanca_order = {"Nenhuma": 0, "Baixa": 1, "Media": 2, "Alta": 3}
+    freq_num = poupanca_order.get(frequencia_poupanca, 0)
 
     total_gastos = sum(t.get("valor", 0) for t in transacoes_classificadas)
-
     proporcao_essenciais = 0
     proporcao_nao_essenciais = 0
     if renda_mensal > 0:
@@ -108,14 +124,35 @@ def classificar_perfil(renda_mensal, nivel_endividamento, frequencia_poupanca,
         proporcao_essenciais = gastos_essenciais / renda_mensal
         proporcao_nao_essenciais = gastos_nao_essenciais / renda_mensal
 
-    poupanca_score = {"Nenhuma": 0, "Baixa": 0.25, "Media": 0.5, "Alta": 1.0}
-    freq_score = poupanca_score.get(frequencia_poupanca, 0)
-
     endividamento_norm = nivel_endividamento / 100.0
+
+    if modelo_perfil is not None:
+        import pandas as pd
+        import numpy as np
+        input_df = pd.DataFrame([{
+            "renda_mensal": renda_mensal,
+            "nivel_endividamento": endividamento_norm * 100,
+            "proporcao_comprometimento_renda": proporcao_essenciais + proporcao_nao_essenciais,
+            "proporcao_gastos_nao_essenciais": proporcao_nao_essenciais,
+            "frequencia_poupanca_Nenhuma": 1 if freq_num == 0 else 0,
+            "frequencia_poupanca_Baixa": 1 if freq_num == 1 else 0,
+            "frequencia_poupanca_Media": 1 if freq_num == 2 else 0,
+            "frequencia_poupanca_Alta": 1 if freq_num == 3 else 0,
+        }])
+
+        if hasattr(modelo_perfil, "predict_proba"):
+            probas = modelo_perfil.predict_proba(input_df)[0]
+            idx = int(np.argmax(probas))
+            perfil = str(modelo_perfil.classes_[idx])
+            probabilidade = round(float(probas[idx]), 2)
+        else:
+            perfil = str(modelo_perfil.predict(input_df)[0])
+            probabilidade = 0.85
+        return perfil, probabilidade
 
     risco = (
         endividamento_norm * 0.35
-        + (1 - freq_score) * 0.25
+        + (1 - freq_num / 3.0) * 0.25
         + proporcao_nao_essenciais * 0.20
         + proporcao_essenciais * 0.10
         + (total_gastos / renda_mensal if renda_mensal > 0 else 0) * 0.10
