@@ -116,10 +116,11 @@ Notebook contendo:
 
 ### Back-End 
 API REST contendo: 
-* Endpoint para análise financeira; 
-* Endpoint para classificação de transações; 
+* Endpoint para análise financeira (`POST /analise-financeira`); 
+* Endpoint para classificação de transações (`POST /classificacao-transacoes`); 
+* Endpoint para histórico de análises (`GET /historico-analises`); 
 * Validação de entrada; 
-* Tratamento de erros; 
+* Tratamento de erros com códigos padronizados; 
 * Documentação dos endpoints. 
 
 ### OCI
@@ -166,8 +167,15 @@ Exemplos:
 
 ## Exemplo de uso 
 
-### Endpoint 
-`POST /analise-financeira` 
+### Endpoints
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/analise-financeira` | Análise completa (perfil + padrões + recomendações) |
+| POST | `/classificacao-transacoes` | Classificação isolada de transações |
+| GET | `/historico-analises` | Histórico de análises realizadas |
+
+### Exemplo: `POST /analise-financeira`
 
 ### Entrada 
 ```json
@@ -193,15 +201,15 @@ Exemplos:
 ```
 ### Saída
 ```json
-{ 
-  "perfil_financeiro": "Em observacao", 
-  "probabilidade": 0.82, 
-  "resumo_gastos": { 
-    "alimentacao": 420, 
-    "transporte": 300, 
-    "lazer": 40 
-  }, 
-  "padroes_identificados": [
+{
+  "perfilFinanceiro": "Em observacao",
+  "probabilidade": 0.82,
+  "resumoGastos": {
+    "Alimentacao": 420,
+    "Transporte": 300,
+    "Lazer": 40
+  },
+  "padroesIdentificados": [
     "Categoria de maior gasto: Alimentacao",
     "Comprometimento de renda com gastos essenciais: 16%",
     "Gastos nao essenciais comprometem 1% da renda"
@@ -209,8 +217,8 @@ Exemplos:
   "recomendacoes": [
     "Aumentar reserva financeira mensal",
     "Monitorar gastos recorrentes em Alimentacao"
-  ] 
-} 
+  ]
+}
 ```
 
 ---
@@ -228,15 +236,15 @@ Exemplos:
 
 ---
 
-## Recursos opcionais
+## Recursos opcionais (implementados)
 
+* ✅ Histórico de análises;
+* ✅ Containerização com Docker;
+* ✅ Testes automatizados (back-end, ml-service, front-end);
 * Dashboard financeiro;
 * Visualização da evolução financeira;
 * Processamento em lote via CSV;
-* Histórico de análises;
 * Alertas de gastos elevados;
-* Containerização com Docker;
-* Testes automatizados;
 * Exportação de relatórios;
 * Explicabilidade dos modelos.
 
