@@ -2,9 +2,9 @@ export const analiseFinanceiraMock = {
   perfilFinanceiro: "Em observacao",
   probabilidade: 0.82,
   resumoGastos: {
-    alimentacao: 420,
-    transporte: 300,
-    lazer: 40,
+    Alimentacao: 420,
+    Transporte: 300,
+    Lazer: 40,
   },
   padroesIdentificados: [
     "Categoria de maior gasto: Alimentacao",

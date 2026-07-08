@@ -92,11 +92,13 @@ def classificar_transacoes(transacoes):
         if modelo_transacoes is not None and vectorizer is not None:
             desc_vec = vectorizer.transform([desc_clean])
             cat_idx = modelo_transacoes.predict(desc_vec)[0]
-            if isinstance(modelo_transacoes, LogisticRegression):
+            if hasattr(modelo_transacoes, "predict_proba"):
                 probs = modelo_transacoes.predict_proba(desc_vec)[0]
                 max_prob = max(probs)
                 if max_prob >= 0.5:
                     categoria = str(cat_idx)
+            else:
+                categoria = str(cat_idx)
 
         if categoria == CATEGORIA_PADRAO:
             maior_pontuacao = 0

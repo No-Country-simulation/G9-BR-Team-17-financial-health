@@ -19,12 +19,13 @@ public class GlobalExceptionHandler {
         if (fieldError.isPresent()) {
             var fe = fieldError.get();
             var codigo = "CAMPO_INVALIDO";
-            if (fe.getField().contains("transacoes") && fe.getCode() != null
+            if (fe.getCode() != null && fe.getCode().contains("Pattern")) {
+                codigo = "ENUM_INVALIDO";
+            } else if (fe.getField().contains("transacoes") && fe.getCode() != null
                 && fe.getCode().contains("NotEmpty")) {
                 codigo = "LISTA_TRANSACOES_VAZIA";
-            }
-            if ("transacoes[].valor".equals(fe.getField())
-                || "transacoes[].descricao".equals(fe.getField())) {
+            } else if (fe.getField() != null
+                && fe.getField().matches("transacoes\\[\\d+\\]\\.(valor|descricao)")) {
                 codigo = "VALOR_TRANSACAO_INVALIDO";
             }
             return ResponseEntity.unprocessableEntity()
@@ -53,8 +54,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<ErroResponse> handleHttpClientError(HttpClientErrorException ex) {
-        return ResponseEntity.status(ex.getStatusCode())
-            .body(new ErroResponse("ERRO_ML_SERVICE", "Erro no servico de ML", null));
+        try {
+            var body = ex.getResponseBodyAsString();
+            var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            var tree = mapper.readTree(body);
+            var codigo = tree.has("codigo") ? tree.get("codigo").asText()
+                       : tree.path("erro").has("codigo") ? tree.path("erro").get("codigo").asText()
+                       : "ERRO_ML_SERVICE";
+            var mensagem = tree.has("mensagem") ? tree.get("mensagem").asText()
+                          : tree.path("erro").has("mensagem") ? tree.path("erro").get("mensagem").asText()
+                          : "Erro no servico de ML";
+            var campo = tree.has("campo") ? tree.get("campo").asText()
+                       : tree.path("erro").has("campo") && !tree.path("erro").get("campo").isNull()
+                       ? tree.path("erro").get("campo").asText() : null;
+            return ResponseEntity.status(ex.getStatusCode())
+                .body(new ErroResponse(codigo, mensagem, campo));
+        } catch (Exception e) {
+            return ResponseEntity.status(ex.getStatusCode())
+                .body(new ErroResponse("ERRO_ML_SERVICE", "Erro no servico de ML", null));
+        }
     }
 
     @ExceptionHandler(MlServiceIndisponivelException.class)

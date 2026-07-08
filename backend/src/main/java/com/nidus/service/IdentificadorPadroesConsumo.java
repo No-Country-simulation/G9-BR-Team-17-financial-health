@@ -103,8 +103,7 @@ public class IdentificadorPadroesConsumo {
 
     private String normalizar(String texto) {
         if (texto == null) return "";
-        return texto.trim().toLowerCase()
-            .replaceAll("[^a-z0-9\\s]", "")
-            .replaceAll("\\s+", " ");
+        var nfd = java.text.Normalizer.normalize(texto.trim().toLowerCase(), java.text.Normalizer.Form.NFD);
+        return nfd.replaceAll("[^a-z0-9\\s]", "").replaceAll("\\s+", " ");
     }
 }

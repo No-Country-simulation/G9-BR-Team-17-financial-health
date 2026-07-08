@@ -3,6 +3,7 @@ package com.nidus.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nidus.repository.AnaliseRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
@@ -21,9 +22,11 @@ public class HistoricoAnalisesController {
     }
 
     @GetMapping("/historico-analises")
-    public ResponseEntity<HistoricoResponse> listar() {
-        var analises = repository.findAllByOrderByCriadoEmDesc();
-        var historico = analises.stream()
+    public ResponseEntity<HistoricoResponse> listar(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "20") int tamanho) {
+        var analises = repository.findAllByOrderByCriadoEmDesc(PageRequest.of(pagina, tamanho));
+        var historico = analises.getContent().stream()
             .map(a -> {
                 Map<String, BigDecimal> resumoGastos = Map.of();
                 try {

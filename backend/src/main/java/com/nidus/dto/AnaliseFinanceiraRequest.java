@@ -5,15 +5,18 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class AnaliseFinanceiraRequest {
 
+    @NotNull(message = "Renda mensal e obrigatoria")
     @DecimalMin(value = "0.01", message = "Renda mensal deve ser maior que zero")
     private BigDecimal rendaMensal;
 
+    @NotNull(message = "Nivel de endividamento e obrigatorio")
     @DecimalMin(value = "0", message = "Nivel de endividamento deve estar entre 0 e 100")
     @DecimalMax(value = "100", message = "Nivel de endividamento deve estar entre 0 e 100")
     private BigDecimal nivelEndividamento;
