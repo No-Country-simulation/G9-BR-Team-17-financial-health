@@ -203,16 +203,18 @@ Saída:
 ```json
 {
   "perfilFinanceiro": "Em observacao",
-  "probabilidade": 0.82,
+  "probabilidade": 0.57,
   "resumoGastos": {
-    "alimentacao": 420,
-    "transporte": 300,
-    "lazer": 40
+    "Transporte": 300,
+    "Alimentacao": 420,
+    "Lazer": 40
   },
   "padroesIdentificados": [
-    "Categoria de maior gasto: Alimentacao",
+    "Concentracao em Transporte (39,47% do total gasto)",
+    "Concentracao em Alimentacao (55,26% do total gasto)",
     "Comprometimento de renda com gastos essenciais: 16%",
-    "Gastos nao essenciais comprometem 1% da renda"
+    "Gastos nao essenciais comprometem 1% da renda",
+    "Categoria de maior gasto: Alimentacao"
   ],
   "recomendacoes": [
     "Aumentar reserva financeira mensal",
@@ -241,20 +243,23 @@ Saida:
 ```json
 {
   "perfilFinanceiro": "Saudavel",
-  "probabilidade": 0.91,
+  "probabilidade": 0.95,
   "resumoGastos": {
-    "moradia": 1500,
-    "saude": 120,
-    "educacao": 200
+    "Moradia": 1500,
+    "Saude": 120,
+    "Educacao": 200
   },
   "padroesIdentificados": [
-    "Categoria de maior gasto: Moradia",
-    "Comprometimento de renda com gastos essenciais: 22%",
-    "Gastos nao essenciais comprometem 0% da renda"
+    "Concentracao em Moradia (82,42% do total gasto)",
+    "Comprometimento de renda com gastos essenciais: 23%",
+    "Gastos nao essenciais comprometem 0% da renda",
+    "Transacao atipica: Aluguel (valor muito acima da media)",
+    "Categoria de maior gasto: Moradia"
   ],
   "recomendacoes": [
-    "Manter o padrao atual de poupanca",
-    "Considerar reserva de emergencia adicional"
+    "Manter o padrao atual de poupanca e gastos",
+    "Considerar reserva de emergencia adicional",
+    "Monitorar gastos recorrentes em Moradia"
   ]
 }
 ```
@@ -279,14 +284,14 @@ Saída:
 ```json
 {
   "perfilFinanceiro": "Em risco",
-  "probabilidade": 0.88,
+  "probabilidade": 0.72,
   "resumoGastos": {
-    "servicos": 900,
-    "transporte": 250,
-    "alimentacao": 300
+    "Transporte": 250,
+    "Alimentacao": 300,
+    "Servicos": 900
   },
   "padroesIdentificados": [
-    "Concentracao em Servicos (62% do total gasto)",
+    "Concentracao em Servicos (62,07% do total gasto)",
     "Comprometimento de renda com gastos essenciais: 18%",
     "Gastos nao essenciais comprometem 30% da renda",
     "Categoria de maior gasto: Servicos"
@@ -294,8 +299,8 @@ Saída:
   "recomendacoes": [
     "Priorizar quitacao de dividas para reduzir o comprometimento da renda",
     "Estabelecer meta minima de poupanca mensal, mesmo que o valor seja pequeno",
-    "Revisar assinaturas e servicos contratados",
     "Reduzir o nivel de endividamento antes de assumir novos compromissos",
+    "Revisar assinaturas e servicos contratados",
     "Monitorar gastos recorrentes em Servicos"
   ]
 }
